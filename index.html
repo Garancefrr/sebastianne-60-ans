@@ -10,7 +10,7 @@
 <meta name="theme-color" content="#15161C">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Jost:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
 <style>
   :root{
     --nuit:#15161C;        /* fond encre */
@@ -357,6 +357,21 @@
   }
   @media (max-width:820px){.hero-polas{display:none}}
 
+  /* Mot manuscrit + indices plus visibles */
+  .mot-secret{position:absolute;top:-1.4rem;left:-1.6rem;transform:rotate(-6deg);font-family:"Caveat",cursive;font-weight:600;font-size:1.3rem;line-height:1.05;color:var(--nuit);background:var(--or-clair);padding:.7rem 1rem;box-shadow:0 8px 20px rgba(0,0,0,.35);text-align:left;z-index:2;max-width:230px}
+  .mot-secret::before{content:"";position:absolute;left:50%;top:-8px;width:46px;height:14px;transform:translateX(-50%) rotate(3deg);background:rgba(255,255,255,.45);border:1px solid rgba(0,0,0,.08)}
+  .indice{width:12px;height:12px;box-shadow:0 0 10px 2px rgba(227,201,138,.8)}
+  @keyframes scintille{0%,100%{opacity:.55;transform:rotate(45deg) scale(.85)}50%{opacity:1;transform:rotate(45deg) scale(1.25)}}
+  #secret-brunch{cursor:pointer}
+  .puce-secrets{position:fixed;left:1rem;bottom:1rem;z-index:30;font-family:"Caveat",cursive;font-weight:600;font-size:1.15rem;color:var(--nuit);background:var(--or-clair);padding:.3rem .8rem;transform:rotate(-3deg);box-shadow:0 6px 16px rgba(0,0,0,.3);pointer-events:none}
+  .puce-secrets.complet{background:var(--or)}
+  @media (max-width:820px){
+    .mot-secret{position:static;transform:rotate(-2deg);margin:0 auto 1rem;max-width:none;font-size:1.15rem;text-align:center;width:fit-content}
+    .puce-secrets{bottom:5.2rem;font-size:1rem;display:none}
+    body.apres-accueil .puce-secrets{display:block}
+    body.rsvp-ouvert .puce-secrets{display:none}
+  }
+
   footer{background:var(--nuit);color:var(--champagne);padding:3rem 0;text-align:center;border-top:1px solid var(--trait-nuit)}
   footer p{max-width:none;margin:0;opacity:.75}
   footer .sign{font-family:"Cormorant Garamond",serif;font-style:italic;font-size:1.5rem;margin-bottom:.4rem;opacity:1;color:var(--or-clair)}
@@ -400,6 +415,7 @@
 <header class="hero" id="haut">
   <div class="wrap">
     <div class="cadre">
+      <div class="mot-secret" aria-hidden="true">Psst… huit petits secrets se cachent dans cette page. Cherchez les losanges dorés qui scintillent, et cliquez dessus.</div>
       <span class="coupe-zone secret-cible" id="secret-coupe" title="Santé !"><svg class="coupe" viewBox="0 0 92 120" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#C8A45A" stroke-width="1.4" stroke-linecap="round" aria-hidden="true">
         <!-- coupe de champagne -->
         <path d="M14 8 H78 C78 40 64 56 46 56 C28 56 14 40 14 8 Z"/>
@@ -455,7 +471,7 @@
       </div>
       <div class="adresse">
         <h3>Adresse de la fête</h3>
-        <address>236 Rue de la Chevrière<br>76730 Omonville<br>Normandie</address>
+        <address>236 Rue de la Chevrière<br><span class="secret-cible" id="secret-village">76730 Omonville<span class="indice" aria-hidden="true"></span></span><br>Normandie</address>
         <div class="liens">
           <a href="https://www.google.com/maps/dir/?api=1&destination=236+Rue+de+la+Chevri%C3%A8re%2C+Omonville">Itinéraire Google Maps</a>
           <a href="https://www.gites-de-france.com/fr/normandie/seine-maritime/gites-de-francer-la-maison-de-philippe-76g2374">Voir la maison</a>
@@ -484,7 +500,7 @@
     <div class="jour">
       <h3>Dimanche 16 mai <small>en douceur</small></h3>
       <ul class="frise">
-        <li><span class="heure">11h00</span><span class="quoi"><strong>Brunch à la maison</strong><span>Pour ceux qui ont encore faim, ceux qui ont encore des choses à raconter, et ceux qui veulent juste un café avant la route.</span></span></li>
+        <li class="secret-cible" id="secret-brunch"><span class="heure">11h00</span><span class="quoi"><strong>Brunch à la maison<span class="indice" aria-hidden="true"></span></strong><span>Pour ceux qui ont encore faim, ceux qui ont encore des choses à raconter, et ceux qui veulent juste un café avant la route.</span></span></li>
       </ul>
     </div>
 
@@ -711,7 +727,7 @@
   <div class="wrap">
     <p class="sign secret-cible" id="secret-sign">Garance, Mérédith et Valère<span class="indice" aria-hidden="true"></span></p>
     <p>On compte sur vous pour garder le secret jusqu'au 15 mai. Après, vous pourrez tout lui raconter, surtout le quiz.</p>
-    <p class="secrets" id="compteur-secrets">Six petits secrets sont cachés dans cette page : cherchez les losanges dorés qui scintillent. Trouvés : 0 sur 6.</p>
+    <p class="secrets" id="compteur-secrets">Huit petits secrets sont cachés dans cette page : cherchez les losanges dorés qui scintillent. Trouvés : 0 sur 8.</p>
   </div>
 </footer>
 
@@ -804,7 +820,7 @@
   var compteur = document.getElementById("compteur-secrets");
   function majCompteur(){
     var n = Object.keys(trouves).length;
-    if (compteur) compteur.textContent = n >= 6 ? "Les six secrets sont trouvés. Bah Dominiqueeeeee ! Vous êtes officiellement prêts pour la soirée." : "Six petits secrets sont cachés dans cette page : cherchez les losanges dorés qui scintillent. Trouvés : " + n + " sur 6.";
+    if (compteur) compteur.textContent = n >= 8 ? "Les huit secrets sont trouvés. Bah Dominiqueeeeee ! Vous êtes officiellement prêts pour la soirée." : "Huit petits secrets sont cachés dans cette page : cherchez les losanges dorés qui scintillent. Trouvés : " + n + " sur 8.";
   }
   function secret(cle, texte){
     trouves[cle] = true;
@@ -909,6 +925,18 @@
       document.body.classList.toggle("apres-accueil", !entries[0].isIntersecting);
     }, { threshold: 0.15 }).observe(heroEl);
   } else { document.body.classList.add("apres-accueil"); }
+
+  // Nouveaux secrets
+  document.getElementById("secret-village").addEventListener("click", function(){
+    secret("village", "Omonville, un village si calme que le groupe de jazz a promis de jouer doucement. Promis, pas juré.");
+  });
+  document.getElementById("secret-brunch").addEventListener("click", function(){
+    secret("brunch", "Le café sera prêt bien avant 11h, pour ceux qui ont dansé tard. On en fait partie.");
+  });
+  // Petit compteur flottant
+  var puce = document.createElement("div"); puce.className = "puce-secrets"; puce.setAttribute("aria-hidden","true"); document.body.appendChild(puce);
+  function majPuce(){ var n = Object.keys(trouves).length; puce.textContent = "Secrets : " + n + " / 8"; puce.classList.toggle("complet", n >= 8); }
+  var _majCompteur = majCompteur; majCompteur = function(){ _majCompteur(); majPuce(); }; majPuce();
 </script>
 </body>
 </html>
