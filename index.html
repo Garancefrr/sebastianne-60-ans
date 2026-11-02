@@ -325,6 +325,20 @@
     .galerie{gap:.5rem}
   }
 
+  /* Accueil : tient dans un écran d'ordinateur */
+  @media (min-width:821px){
+    .hero{padding:1.6rem 0 1.8rem;min-height:calc(100vh - 6.9rem);display:flex;align-items:center}
+    .hero .cadre{padding:1.6rem 2.2rem 1.7rem;max-width:720px}
+    .coupe{width:64px;margin-bottom:.5rem}
+    .tampon{margin-bottom:.7rem;font-size:.74rem}
+    .hero .intro{font-size:1.25rem;margin-bottom:.4rem}
+    .hero h1{font-size:clamp(2.6rem,7.2vh,5.2rem)}
+    .hero .filet{margin:1rem auto}
+    .hero .date strong{font-size:1.6rem}
+    .hero .boutons{margin-top:1.3rem}
+    .hero .boutons .btn{padding:.7rem 1.4rem}
+  }
+
   footer{background:var(--nuit);color:var(--champagne);padding:3rem 0;text-align:center;border-top:1px solid var(--trait-nuit)}
   footer p{max-width:none;margin:0;opacity:.75}
   footer .sign{font-family:"Cormorant Garamond",serif;font-style:italic;font-size:1.5rem;margin-bottom:.4rem;opacity:1;color:var(--or-clair)}
