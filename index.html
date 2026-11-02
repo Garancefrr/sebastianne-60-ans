@@ -268,6 +268,63 @@
   @media (max-width:700px){.mur{columns:2;column-gap:1rem}}
   @media (max-width:420px){.mur{columns:2;column-gap:.7rem}.pola figcaption{font-size:.85rem}}
 
+  /* ---- Mobile : ergonomie ---- */
+  .menu-btn{display:none;background:none;border:1px solid var(--trait-nuit);width:42px;height:38px;padding:8px 9px;cursor:pointer;flex-direction:column;justify-content:space-between}
+  .menu-btn span{display:block;height:1.5px;background:var(--champagne);transition:transform .2s,opacity .2s}
+  .menu-btn[aria-expanded="true"] span:nth-child(1){transform:translateY(9px) rotate(45deg)}
+  .menu-btn[aria-expanded="true"] span:nth-child(2){opacity:0}
+  .menu-btn[aria-expanded="true"] span:nth-child(3){transform:translateY(-9px) rotate(-45deg)}
+  .barre-mobile{display:none}
+  @media (max-width:820px){
+    .secret{font-size:.82rem;padding:.45rem .8rem;line-height:1.3}
+    nav .wrap{flex-wrap:nowrap;min-height:3.3rem}
+    nav .marque{font-size:1.1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .menu-btn{display:flex;flex:none}
+    nav ul{display:none;position:absolute;left:0;right:0;top:100%;background:var(--nuit);border-bottom:1px solid var(--trait-nuit);flex-direction:column;gap:0;padding:.4rem 0 .6rem}
+    nav ul.ouvert{display:flex}
+    nav ul li a{display:block;padding:.75rem 1.25rem;font-size:1rem;border:0}
+    nav ul a.cta{display:none}
+    nav{position:sticky}
+    .hero{padding:2rem 0 2.4rem}
+    .hero .cadre{padding:1.8rem 1.1rem 1.6rem}
+    .hero h1{font-size:clamp(2.6rem,13vw,3.6rem)}
+    .coupe{width:64px;margin-bottom:.6rem}
+    .hero .boutons{flex-direction:column;align-items:stretch;gap:.6rem}
+    .hero .boutons .btn{text-align:center}
+    section{padding:2.6rem 0}
+    h2{font-size:2.1rem}
+    .chapo{font-size:1.05rem}
+    .frise .quoi span{font-size:.95rem}
+    .teaser-quiz{padding:1.1rem 1.2rem}
+    .teaser-quiz p{font-size:1.15rem}
+    /* quiz : vignette à côté du titre */
+    #quiz .question{grid-template-columns:1fr 104px;gap:.6rem 1rem;align-items:start}
+    #quiz .question h3{grid-column:1;grid-row:1;font-size:1.22rem;margin-bottom:0}
+    #quiz .polaroid{grid-column:2;grid-row:1;width:104px;margin:0;padding:5px 5px 6px;justify-self:end}
+    #quiz .polaroid figcaption{font-size:.72rem;margin-top:.3rem;line-height:1.15}
+    #quiz .polaroid::after{width:34px;height:10px;top:-6px}
+    #quiz .question .reponses,#quiz .question .explication{grid-column:1 / span 2}
+    .reponses button{padding:.65rem .85rem;font-size:.95rem}
+    .score strong{font-size:2rem}
+    /* barre fixe */
+    body{padding-bottom:4.6rem}
+    .barre-mobile{display:block;position:fixed;left:0;right:0;bottom:0;z-index:40;padding:.6rem 1rem calc(.6rem + env(safe-area-inset-bottom));background:rgba(21,22,28,.94);backdrop-filter:blur(8px);border-top:1px solid var(--trait-nuit)}
+    .barre-mobile .btn{display:block;width:100%;text-align:center;font-family:inherit;font-size:1rem;padding:.85rem}
+    body.rsvp-ouvert .barre-mobile{display:none}
+    .toast{bottom:5.4rem}
+    .rsvp-court .ouvrir-rsvp{width:100%}
+    /* fenêtre en volet bas */
+    dialog{width:100%;max-width:none;max-height:92vh;margin:auto 0 0;border-left:0;border-right:0;border-bottom:0}
+    dialog form{padding:1.4rem 1.1rem calc(1.4rem + env(safe-area-inset-bottom))}
+    dialog h3{font-size:1.7rem;margin-bottom:1rem}
+    .mur{columns:2;column-gap:.8rem}
+    .pola{padding:6px 6px 8px;margin-bottom:1.1rem}
+    .pola figcaption{font-size:.82rem;margin-top:.4rem}
+    .pola::after{width:36px;height:11px;top:-7px}
+    footer{padding:2rem 0}
+    .galerie{gap:.5rem}
+  }
+
   footer{background:var(--nuit);color:var(--champagne);padding:3rem 0;text-align:center;border-top:1px solid var(--trait-nuit)}
   footer p{max-width:none;margin:0;opacity:.75}
   footer .sign{font-family:"Cormorant Garamond",serif;font-style:italic;font-size:1.5rem;margin-bottom:.4rem;opacity:1;color:var(--or-clair)}
@@ -296,7 +353,8 @@
 <nav>
   <div class="wrap">
     <a class="marque" href="#haut">Les 60 ans de Sébastianne</a>
-    <ul>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="menu-liens" aria-label="Ouvrir le menu"><span></span><span></span><span></span></button>
+    <ul id="menu-liens">
       <li><a href="#lieu">Le lieu</a></li>
       <li><a href="#programme">Le week-end</a></li>
       <li><a href="ou-dormir.html">Où dormir</a></li>
@@ -600,6 +658,8 @@
   </div>
 </section>
 
+<div class="barre-mobile"><button type="button" class="btn plein ouvrir-rsvp">Confirmer ma venue</button></div>
+
 <footer>
   <div class="wrap">
     <p class="sign secret-cible" id="secret-sign">Garance, Mérédith et Valère<span class="indice" aria-hidden="true"></span></p>
@@ -782,6 +842,18 @@
       });
     });
   });
+
+  // ---- Menu mobile ----
+  var menuBtn = document.querySelector(".menu-btn"), menu = document.getElementById("menu-liens");
+  menuBtn.addEventListener("click", function(){
+    var ouvert = menu.classList.toggle("ouvert");
+    menuBtn.setAttribute("aria-expanded", ouvert ? "true" : "false");
+    menuBtn.setAttribute("aria-label", ouvert ? "Fermer le menu" : "Ouvrir le menu");
+  });
+  Array.prototype.forEach.call(menu.querySelectorAll("a"), function(a){ a.addEventListener("click", function(){ menu.classList.remove("ouvert"); menuBtn.setAttribute("aria-expanded","false"); }); });
+  // barre mobile masquée quand la fenêtre RSVP est ouverte
+  dlg.addEventListener("close", function(){ document.body.classList.remove("rsvp-ouvert"); });
+  Array.prototype.forEach.call(document.querySelectorAll(".ouvrir-rsvp"), function(el){ el.addEventListener("click", function(){ document.body.classList.add("rsvp-ouvert"); }); });
 </script>
 </body>
 </html>
