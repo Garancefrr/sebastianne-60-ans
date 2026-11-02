@@ -287,7 +287,7 @@
     nav{position:sticky}
     .hero{padding:2rem 0 2.4rem}
     .hero .cadre{padding:1.8rem 1.1rem 1.6rem}
-    .hero h1{font-size:clamp(2.6rem,13vw,3.6rem)}
+    .hero h1{font-size:clamp(2.2rem,10.5vw,3.4rem)}
     .coupe{width:64px;margin-bottom:.6rem}
     .hero .boutons{flex-direction:column;align-items:stretch;gap:.6rem}
     .hero .boutons .btn{text-align:center}
@@ -298,9 +298,9 @@
     .teaser-quiz{padding:1.1rem 1.2rem}
     .teaser-quiz p{font-size:1.15rem}
     /* quiz : vignette à côté du titre */
-    #quiz .question{grid-template-columns:1fr 104px;gap:.6rem 1rem;align-items:start}
-    #quiz .question h3{grid-column:1;grid-row:1;font-size:1.22rem;margin-bottom:0}
-    #quiz .polaroid{grid-column:2;grid-row:1;width:104px;margin:0;padding:5px 5px 6px;justify-self:end}
+    #quiz .question{grid-template-columns:1fr 92px;gap:.6rem .9rem;align-items:start}
+    #quiz .question h3{grid-column:1;grid-row:1;font-size:1.15rem;line-height:1.15;margin-bottom:0}
+    #quiz .polaroid{grid-column:2;grid-row:1;width:92px;margin:0;padding:5px 5px 6px;justify-self:end}
     #quiz .polaroid figcaption{font-size:.72rem;margin-top:.3rem;line-height:1.15}
     #quiz .polaroid::after{width:34px;height:10px;top:-6px}
     #quiz .question .reponses,#quiz .question .explication{grid-column:1 / span 2}
@@ -308,9 +308,10 @@
     .score strong{font-size:2rem}
     /* barre fixe */
     body{padding-bottom:4.6rem}
-    .barre-mobile{display:block;position:fixed;left:0;right:0;bottom:0;z-index:40;padding:.6rem 1rem calc(.6rem + env(safe-area-inset-bottom));background:rgba(21,22,28,.94);backdrop-filter:blur(8px);border-top:1px solid var(--trait-nuit)}
+    .barre-mobile{display:block;transform:translateY(110%);transition:transform .25s;position:fixed;left:0;right:0;bottom:0;z-index:40;padding:.6rem 1rem calc(.6rem + env(safe-area-inset-bottom));background:rgba(21,22,28,.94);backdrop-filter:blur(8px);border-top:1px solid var(--trait-nuit)}
     .barre-mobile .btn{display:block;width:100%;text-align:center;font-family:inherit;font-size:1rem;padding:.85rem}
     body.rsvp-ouvert .barre-mobile{display:none}
+    body.apres-accueil .barre-mobile{transform:translateY(0)}
     .toast{bottom:5.4rem}
     .rsvp-court .ouvrir-rsvp{width:100%}
     /* fenêtre en volet bas */
@@ -900,6 +901,14 @@
   // barre mobile masquée quand la fenêtre RSVP est ouverte
   dlg.addEventListener("close", function(){ document.body.classList.remove("rsvp-ouvert"); });
   Array.prototype.forEach.call(document.querySelectorAll(".ouvrir-rsvp"), function(el){ el.addEventListener("click", function(){ document.body.classList.add("rsvp-ouvert"); }); });
+
+  // Barre mobile : apparaît une fois l'accueil dépassé
+  if ("IntersectionObserver" in window) {
+    var heroEl = document.querySelector(".hero");
+    new IntersectionObserver(function(entries){
+      document.body.classList.toggle("apres-accueil", !entries[0].isIntersecting);
+    }, { threshold: 0.15 }).observe(heroEl);
+  } else { document.body.classList.add("apres-accueil"); }
 </script>
 </body>
 </html>
