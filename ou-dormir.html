@@ -330,6 +330,16 @@
     footer{padding:2rem 0}
     .galerie{gap:.5rem}
   }
+  dl.carnet{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem 2.5rem;margin:1.5rem 0 0}
+  dl.carnet div{border-top:1px solid var(--or);padding-top:.8rem}
+  dl.carnet dt{font-family:"Cormorant Garamond",serif;font-size:1.4rem;font-weight:500;font-style:italic;margin-bottom:.3rem}
+  dl.carnet dd{margin:0;font-size:1rem;max-width:none}
+  .carnet-sombre dl.carnet div{border-top-color:var(--trait-nuit)}
+  .carnet-sombre dl.carnet dd{color:rgba(234,223,200,.88)}
+  .carnet-sombre h2,.carnet-sombre dt{color:var(--champagne)}
+  .carnet-sombre .chapo{color:rgba(234,223,200,.7)}
+  .carnet-sombre a{color:var(--or-clair)}
+  @media (max-width:820px){dl.carnet{grid-template-columns:1fr;gap:1.1rem}}
 </style>
 </head>
 <body>
@@ -345,7 +355,7 @@
       <li><a href="index.html#programme">Le week-end</a></li>
       <li><a href="ou-dormir.html" aria-current="page">Où dormir</a></li>
       <li><a class="quiz-lien" href="index.html#quiz">Le quiz</a></li>
-      <li><a href="index.html#mots">Un mot pour elle</a></li>
+      <li><a href="pour-elle.html">Un mot pour elle</a></li>
       <li><a href="index.html#photos">Les photos</a></li>
       <li><a class="cta" href="index.html#rsvp">Répondre</a></li>
     </ul>
@@ -495,6 +505,23 @@
       </li>
     </ul>
     <p class="avert">Temps de route estimés depuis la maison, à vérifier avec le lien Itinéraire (on a fait de notre mieux, mais on n'a pas chronométré). La liste complète est aussi dans <a href="https://docs.google.com/spreadsheets/d/1e_dZd9jSeuw6vlxSskPOrJZPrryJGRz_eWGeZcoS7js/edit?usp=sharing">le tableau partagé</a>.</p>
+  </div>
+</section>
+
+<section id="carnet" class="alt carnet-sombre">
+  <div class="wrap">
+    <h2>Le petit carnet pratique</h2>
+    <p class="chapo">Les réponses aux questions qu'on nous posera dix fois. Autant les écrire une bonne fois.</p>
+    <dl class="carnet">
+      <div><dt>Météo</dt><dd>La Normandie en mai, c'est souvent les quatre saisons dans la même journée. Prévoyez une veste pour le soir, même si le soleil est annoncé. Surtout si le soleil est annoncé.</dd></div>
+      <div><dt>Venir en train</dt><dd>Gare d'Auffay (Val-de-Scie), ligne Rouen-Dieppe, à un quart d'heure de la maison. Dites-nous votre heure d'arrivée dans le formulaire : quelqu'un viendra vous chercher. Les horaires sont sur <a href="https://www.sncf-connect.com">SNCF Connect</a>.</dd></div>
+      <div><dt>Venir en voiture</dt><dd>Environ 2h30 depuis Paris, 45 minutes depuis Rouen. Parking privé sur place. Si on est très nombreux, on vous dira où se garer sur le groupe. L'adresse exacte est dans la section « Le lieu ».</dd></div>
+      <div><dt>Dormir</dt><dd>Dix adresses à moins de 20 minutes, toutes dans <a href="#dormir">la liste ci-dessus</a>. Les gîtes sur place se réservent auprès de nous, pas des propriétaires.</dd></div>
+      <div><dt>Le groupe WhatsApp</dt><dd>C'est là que tout se passe : questions, covoiturages, photos du jour J. <a href="https://chat.whatsapp.com/L69QAIyAPCYAB3QPgOUiWr?mode=gi_t">Rejoindre le groupe</a>. Règle unique : Sébastianne n'y est pas, et ça doit le rester.</dd></div>
+      <div><dt>Cadeau</dt><dd>On prépare un cadeau commun, les détails sont sur le groupe WhatsApp. Votre mot pour Sébastianne, juste au-dessus, compte déjà comme un cadeau.</dd></div>
+      <div><dt>Enfants</dt><dd>Les bienvenus. Un grand jardin pour courir, et d'autres enfants pour courir avec. Dites-nous combien ils sont dans le formulaire.</dd></div>
+      <div><dt>En cas de doute</dt><dd>Garance, Mérédith ou Valère, sur le groupe. On répond vite, sauf pendant le cocktail.</dd></div>
+    </dl>
   </div>
 </section>
 

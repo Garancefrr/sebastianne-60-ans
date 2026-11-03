@@ -462,7 +462,7 @@
       <li><a href="#programme">Le week-end</a></li>
       <li><a href="ou-dormir.html">Où dormir</a></li>
       <li><a class="quiz-lien" href="#quiz">Le quiz</a></li>
-      <li><a href="#mots">Un mot pour elle</a></li>
+      <li><a href="pour-elle.html">Un mot pour elle</a></li>
       <li><a href="#photos">Les photos</a></li>
       <li><a class="cta ouvrir-rsvp" href="#rsvp">Répondre</a></li>
     </ul>
@@ -749,65 +749,6 @@
   </form>
 </dialog>
 
-<section id="mots">
-  <div class="wrap">
-    <h2>Un mot pour Sébastianne</h2>
-    <p class="chapo">Une anecdote, un souvenir, une déclaration, une vanne affectueuse : laissez-lui un mot. On les lui offrira le 15 mai, lus au micro ou imprimés dans un joli carnet. Signé ou anonyme, c'est vous qui voyez.</p>
-    <div class="mots-grid">
-      <form id="form-mot" class="form-mot" novalidate>
-        <div class="champ">
-          <label for="mot-texte">Votre mot</label>
-          <textarea id="mot-texte" name="message" placeholder="Ex. : Sébastianne, merci pour les apéros dînatoires, les chansons trop fort et le jour où…"></textarea>
-        </div>
-        <div class="deux">
-          <div class="champ">
-            <label for="mot-prenom">Votre prénom <span class="aide">(facultatif)</span></label>
-            <input type="text" id="mot-prenom" name="prenom" placeholder="ou restez mystérieux">
-          </div>
-          <div class="champ choix-signe">
-            <label class="case"><input type="checkbox" name="signe" checked> Afficher mon prénom</label>
-          </div>
-        </div>
-        <button type="submit">Déposer mon mot</button>
-        <div class="retour" id="retour-mot" role="status" aria-live="polite"></div>
-      </form>
-      <div class="mur-mots" id="mur-mots">
-        <p class="mots-vide">Les premiers mots arrivent bientôt. Soyez celui ou celle qui ouvre le bal.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="playlist" class="alt">
-  <div class="wrap">
-    <div class="playlist">
-      <div>
-        <h2>La playlist de l'après-jazz</h2>
-        <p class="chapo">Quand le groupe rangera ses instruments, c'est votre playlist qui prendra le relais. Ajoutez les titres qui la feront chanter trop fort : ses classiques, vos tubes honteux, tout est accepté.</p>
-        <p class="aide-playlist">Le groupe de jazz a son propre répertoire et ne prend pas de demandes ; la playlist, elle, est à vous.</p>
-      </div>
-      <a class="btn plein lien-playlist" href="https://open.spotify.com/playlist/2r473R1x2FNaMOPH7pygeH?si=65959b51260e46b5" id="lien-playlist">Ouvrir la playlist Spotify</a>
-    </div>
-  </div>
-</section>
-
-<section id="carnet">
-  <div class="wrap">
-    <h2>Le petit carnet pratique</h2>
-    <p class="chapo">Les réponses aux questions qu'on nous posera dix fois. Autant les écrire une bonne fois.</p>
-    <dl class="carnet">
-      <div><dt>Météo</dt><dd>La Normandie en mai, c'est souvent les quatre saisons dans la même journée. Prévoyez une veste pour le soir, même si le soleil est annoncé. Surtout si le soleil est annoncé.</dd></div>
-      <div><dt>Venir en train</dt><dd>Gare d'Auffay (Val-de-Scie), ligne Rouen-Dieppe, à un quart d'heure de la maison. Dites-nous votre heure d'arrivée dans le formulaire : quelqu'un viendra vous chercher. Les horaires sont sur <a href="https://www.sncf-connect.com">SNCF Connect</a>.</dd></div>
-      <div><dt>Venir en voiture</dt><dd>Environ 2h30 depuis Paris, 45 minutes depuis Rouen. Parking privé sur place. Si on est très nombreux, on vous dira où se garer sur le groupe. L'adresse exacte est dans la section « Le lieu ».</dd></div>
-      <div><dt>Dormir</dt><dd>Dix adresses à moins de 20 minutes, toutes dans <a href="ou-dormir.html">Où dormir</a>. Les gîtes sur place se réservent auprès de nous, pas des propriétaires.</dd></div>
-      <div><dt>Le groupe WhatsApp</dt><dd>C'est là que tout se passe : questions, covoiturages, photos du jour J. <a href="https://chat.whatsapp.com/L69QAIyAPCYAB3QPgOUiWr?mode=gi_t" id="lien-whatsapp">Rejoindre le groupe</a>. Règle unique : Sébastianne n'y est pas, et ça doit le rester.</dd></div>
-      <div><dt>Cadeau</dt><dd>On prépare un cadeau commun, les détails sont sur le groupe WhatsApp. Votre mot pour Sébastianne, juste au-dessus, compte déjà comme un cadeau.</dd></div>
-      <div><dt>Enfants</dt><dd>Les bienvenus. Un grand jardin pour courir, et d'autres enfants pour courir avec. Dites-nous combien ils sont dans le formulaire.</dd></div>
-      <div><dt>En cas de doute</dt><dd>Garance, Mérédith ou Valère, sur le groupe. On répond vite, sauf pendant le cocktail.</dd></div>
-    </dl>
-  </div>
-</section>
-
 <section id="photos">
   <div class="wrap">
     <h2>Sébastianne en trente-trois photos</h2>
@@ -1070,12 +1011,6 @@
   function majPuce(){ var n = Object.keys(trouves).length; puce.textContent = "Secrets : " + n + " / 8"; puce.classList.toggle("complet", n >= 8); }
   var _majCompteur = majCompteur; majCompteur = function(){ _majCompteur(); majPuce(); }; majPuce();
 
-  // ---- Liens playlist et WhatsApp ----
-  var lp = document.getElementById("lien-playlist");
-  if (URL_PLAYLIST.indexOf("http") === 0) lp.href = URL_PLAYLIST; else { lp.classList.add("inactif"); lp.textContent = "Playlist bientôt disponible"; }
-  var lw = document.getElementById("lien-whatsapp");
-  if (URL_WHATSAPP.indexOf("http") === 0) lw.href = URL_WHATSAPP; else { lw.removeAttribute("href"); lw.textContent = "Le lien du groupe arrive bientôt"; }
-
   // ---- Envoi générique vers le script Google ----
   function envoyer(donnees){
     return fetch(URL_RSVP, { method:"POST", mode:"no-cors", headers:{ "Content-Type":"text/plain;charset=utf-8" }, body: JSON.stringify(donnees) });
@@ -1088,36 +1023,11 @@
       if (!d) return;
       if (URL_RSVP.indexOf("http") !== 0) { r.className = "retour erreur"; r.textContent = "Pas encore relié au tableau. Répondez sur le groupe WhatsApp en attendant."; return; }
       b.disabled = true; var txt = b.textContent; b.textContent = "Envoi en cours…";
-      envoyer(d).then(function(){ r.className = "retour ok"; r.textContent = merci(d); f.reset(); if (d.type === "mot") { ajouterMotLocal(d); } })
+      envoyer(d).then(function(){ r.className = "retour ok"; r.textContent = merci(d); f.reset(); })
         .catch(function(){ r.className = "retour erreur"; r.textContent = "L'envoi n'a pas abouti. Réessayez dans un instant."; })
         .finally(function(){ b.disabled = false; b.textContent = txt; });
     });
   }
-
-  // ---- Mots pour Sébastianne ----
-  var murMots = document.getElementById("mur-mots");
-  var rots = [-1.5, 1, -0.8, 1.6, -1.2, 0.7];
-  function rendreMots(mots){
-    murMots.innerHTML = "";
-    if (!mots.length) { murMots.innerHTML = '<p class="mots-vide">Les premiers mots arrivent bientôt. Soyez celui ou celle qui ouvre le bal.</p>'; return; }
-    mots.slice(0, 12).forEach(function(m, i){
-      var el = document.createElement("div"); el.className = "mot"; el.style.setProperty("--rot", rots[i % rots.length] + "deg");
-      var p = document.createElement("p"); p.textContent = m.message; el.appendChild(p);
-      var q = document.createElement("span"); q.className = "qui"; q.textContent = m.prenom ? m.prenom : "Quelqu'un qui l'aime bien"; el.appendChild(q);
-      murMots.appendChild(el);
-    });
-    if (mots.length > 12) { var plus = document.createElement("p"); plus.className = "mots-plus"; plus.textContent = "Et " + (mots.length - 12) + " autres mots, gardés au chaud pour le 15 mai."; murMots.appendChild(plus); }
-  }
-  var motsCharges = [];
-  function ajouterMotLocal(d){ motsCharges.unshift({ prenom: d.signe ? d.prenom : "", message: d.message }); rendreMots(motsCharges); }
-  if (URL_RSVP.indexOf("http") === 0) {
-    fetch(URL_RSVP + "?type=mots").then(function(r){ return r.json(); }).then(function(j){ if (j && j.mots) { motsCharges = j.mots; rendreMots(motsCharges); } }).catch(function(){});
-  }
-  brancherFormulaire("form-mot", "retour-mot", function(f){
-    var message = f.message.value.trim(), prenom = f.prenom.value.trim(), signe = f.signe.checked && !!prenom;
-    if (!message) { document.getElementById("retour-mot").className = "retour erreur"; document.getElementById("retour-mot").textContent = "Écrivez au moins quelques mots, même « je t'aime » suffit."; return null; }
-    return { type: "mot", prenom: prenom, message: message, signe: signe };
-  }, function(d){ return "Merci" + (d.prenom ? " " + d.prenom : "") + ", votre mot est au chaud. Elle le découvrira le 15 mai."; });
 
   // ---- Souvenir après le quiz ----
   brancherFormulaire("form-souvenir", "retour-souvenir", function(f){
