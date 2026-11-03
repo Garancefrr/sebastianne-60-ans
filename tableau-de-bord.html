@@ -29,6 +29,24 @@
   section h2{font-size:1.7rem;font-style:italic;margin-bottom:.8rem}
   .carte{background:#fff;border:1px solid var(--trait);padding:1.2rem 1.4rem}
   .deux{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}
+  .pastille{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--sauge);margin-left:.4rem;vertical-align:middle;box-shadow:0 0 0 0 rgba(123,140,107,.6);animation:pulse 2s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(123,140,107,.6)}70%{box-shadow:0 0 0 8px rgba(123,140,107,0)}100%{box-shadow:0 0 0 0 rgba(123,140,107,0)}}
+  .direct-tete{display:flex;align-items:baseline;gap:.8rem;flex-wrap:wrap;margin-bottom:.8rem}
+  .direct-tete .n{font-family:"Cormorant Garamond",serif;font-size:2.6rem;font-weight:500;line-height:1}
+  .direct-tete .l{color:var(--gris)}
+  .auto{margin-left:auto;font-size:.85rem;color:var(--gris);display:flex;gap:.4rem;align-items:center}
+  .fil{list-style:none;margin:0;padding:0;max-height:260px;overflow:auto;border-top:1px solid var(--trait)}
+  .fil li{display:grid;grid-template-columns:5.5rem 1fr auto;gap:.8rem;padding:.4rem 0;border-bottom:1px solid var(--trait);font-size:.9rem;align-items:baseline}
+  .fil .h{color:var(--gris);font-variant-numeric:tabular-nums}
+  .fil .q{color:var(--gris);font-size:.8rem}
+  .fil .visite{color:var(--bronze)}
+  .periode{display:flex;gap:.4rem;margin-bottom:.8rem}
+  .periode button{font:inherit;font-size:.85rem;background:transparent;border:1px solid var(--trait);padding:.3rem .8rem;cursor:pointer}
+  .periode button.actif{background:var(--nuit);color:var(--champagne);border-color:var(--nuit)}
+  #g-jours{width:100%;height:300px;display:block}
+  #g-jours text{font-family:"Jost",sans-serif;font-size:12px;fill:var(--gris)}
+  #g-jours .grille{stroke:var(--trait);stroke-width:1}
+  #g-jours .val{font-size:12px;fill:var(--encre);font-weight:500}
   /* barres */
   .barres{display:flex;align-items:flex-end;gap:4px;height:160px;border-bottom:1px solid var(--trait);padding-bottom:0}
   .barre{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;min-width:0;position:relative}
@@ -88,10 +106,18 @@
     </div>
 
     <section>
+      <h2>En ce moment <span class="pastille" id="pastille-direct"></span></h2>
+      <div class="carte direct">
+        <div class="direct-tete"><div class="n" id="t-actifs">–</div><div class="l">personnes sur le site dans les 5 dernières minutes</div><label class="auto"><input type="checkbox" id="auto" checked> mise à jour automatique toutes les 30 s</label></div>
+        <ul class="fil" id="fil"></ul>
+      </div>
+    </section>
+
+    <section>
       <h2>Visites par jour</h2>
       <div class="carte">
-        <div class="barres" id="g-jours"></div>
-        <div class="axe" id="g-jours-axe"></div>
+        <div class="periode"><button type="button" data-j="7">7 jours</button><button type="button" data-j="14" class="actif">14 jours</button><button type="button" data-j="30">30 jours</button></div>
+        <svg id="g-jours" viewBox="0 0 1000 300" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Visites par jour"></svg>
         <div class="legende"><i style="background:var(--or)"></i>pages vues <i style="background:var(--nuit)"></i>visiteurs différents</div>
       </div>
     </section>
@@ -144,16 +170,19 @@
     $("t-quiz").textContent = nb(s.quiz.length);
     $("t-quiz-moy").textContent = s.quiz.length ? "moyenne " + (s.quiz.reduce(function(a,b){return a+b;},0)/s.quiz.length).toFixed(1) + " / 8" : "";
 
-    // graphique par jour (14 derniers jours)
-    var g = $("g-jours"), ax = $("g-jours-axe"); g.innerHTML = ""; ax.innerHTML = "";
-    var serie = (s.parJour || []).slice(-14);
-    if (!serie.length) { g.innerHTML = '<p class="vide">Pas encore de visite enregistrée.</p>'; }
-    var max = Math.max.apply(null, serie.map(function(d){ return d.visites; }).concat([1]));
-    serie.forEach(function(d){
-      var b = document.createElement("div"); b.className = "barre";
-      b.innerHTML = '<b>' + d.visites + '</b><i style="height:' + Math.round(d.visites/max*100) + '%"></i><i class="u" style="height:' + Math.round(d.visiteurs/max*100) + '%"></i>';
-      g.appendChild(b);
-      var sp = document.createElement("span"); sp.textContent = d.jour.slice(8,10) + "/" + d.jour.slice(5,7); ax.appendChild(sp);
+    derniereStats = s; graphique();
+    // en ce moment
+    $("t-actifs").textContent = nb(s.actifs);
+    var fil = $("fil"); fil.innerHTML = "";
+    if (!(s.recents || []).length) fil.innerHTML = '<li class="vide">Aucune activité enregistrée pour l\'instant.</li>';
+    (s.recents || []).forEach(function(r){
+      var li = document.createElement("li");
+      var d = new Date(r.t), h = d.toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit" }), auj = d.toDateString() === new Date().toDateString();
+      var quoi = r.type === "visite" ? "arrive sur « " + nomPage(r.page) + " »" : r.action + (r.detail ? " : " + r.detail : "");
+      li.innerHTML = '<span class="h"></span><span class="' + (r.type === "visite" ? "visite" : "") + '"></span><span class="q"></span>';
+      li.children[0].textContent = (auj ? "" : d.toLocaleDateString("fr-FR", { day:"2-digit", month:"2-digit" }) + " ") + h;
+      li.children[1].textContent = quoi; li.children[2].textContent = "visiteur " + r.visiteur + " · " + r.appareil;
+      fil.appendChild(li);
     });
 
     var actions = {}; var secrets = {};
@@ -176,6 +205,34 @@
       tr.appendChild(td(r.adultes)); tr.appendChild(td(r.enfants)); tb.appendChild(tr);
     });
   }
+  var derniereStats = null, nbJours = 14;
+  function nomPage(p){ return { index:"Accueil", "ou-dormir":"Où dormir", "pour-elle":"Un mot pour elle", cadeau:"Le cadeau", "tableau-de-bord":"Tableau de bord" }[p] || p; }
+  function graphique(){
+    var s = derniereStats; if (!s) return;
+    var parJour = {}; (s.parJour || []).forEach(function(d){ parJour[d.jour] = d; });
+    var jours = []; var auj = new Date();
+    for (var i = nbJours - 1; i >= 0; i--) { var d = new Date(auj.getFullYear(), auj.getMonth(), auj.getDate() - i); var k = d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0"); jours.push({ k: k, d: d, v: (parJour[k] || {}).visites || 0, u: (parJour[k] || {}).visiteurs || 0 }); }
+    var W = 1000, H = 300, mg = { h: 20, b: 48, g: 36, d: 10 }, w = W - mg.g - mg.d, h = H - mg.h - mg.b;
+    var max = Math.max.apply(null, jours.map(function(j){ return j.v; }).concat([4]));
+    var pas = max <= 10 ? 2 : max <= 50 ? 10 : max <= 200 ? 50 : 100; max = Math.ceil(max / pas) * pas;
+    var svg = ""; 
+    for (var y = 0; y <= max; y += pas) { var py = mg.h + h - y / max * h; svg += '<line class="grille" x1="' + mg.g + '" x2="' + (W - mg.d) + '" y1="' + py + '" y2="' + py + '"/><text x="' + (mg.g - 6) + '" y="' + (py + 4) + '" text-anchor="end">' + y + '</text>'; }
+    var bw = w / jours.length, bar = Math.min(bw * 0.34, 28), gap = 3;
+    var joursSem = ["dim","lun","mar","mer","jeu","ven","sam"];
+    jours.forEach(function(j, i){
+      var x = mg.g + i * bw + bw / 2;
+      var hv = j.v / max * h, hu = j.u / max * h;
+      svg += '<rect x="' + (x - bar - gap/2) + '" y="' + (mg.h + h - hv) + '" width="' + bar + '" height="' + hv + '" fill="#C8A45A" rx="2"/>';
+      svg += '<rect x="' + (x + gap/2) + '" y="' + (mg.h + h - hu) + '" width="' + bar + '" height="' + hu + '" fill="#15161C" rx="2"/>';
+      if (j.v) svg += '<text class="val" x="' + (x - gap/2 - bar/2) + '" y="' + (mg.h + h - hv - 5) + '" text-anchor="middle">' + j.v + '</text>';
+      if (j.u) svg += '<text class="val" x="' + (x + gap/2 + bar/2) + '" y="' + (mg.h + h - hu - 5) + '" text-anchor="middle">' + j.u + '</text>';
+      var montrer = nbJours <= 14 || i % 2 === 0 || i === jours.length - 1;
+      if (montrer) svg += '<text x="' + x + '" y="' + (H - 28) + '" text-anchor="middle">' + joursSem[j.d.getDay()] + '</text><text x="' + x + '" y="' + (H - 12) + '" text-anchor="middle">' + String(j.d.getDate()).padStart(2,"0") + "/" + String(j.d.getMonth()+1).padStart(2,"0") + '</text>';
+    });
+    $("g-jours").innerHTML = svg;
+  }
+  Array.prototype.forEach.call(document.querySelectorAll(".periode button"), function(b){ b.addEventListener("click", function(){ nbJours = Number(b.getAttribute("data-j")); Array.prototype.forEach.call(document.querySelectorAll(".periode button"), function(o){ o.classList.toggle("actif", o === b); }); graphique(); }); });
+  setInterval(function(){ if ($("auto").checked && cle && !contenu.hidden) charger(); }, 30000);
   function charger(){
     if (!cle) return;
     $("maj").textContent = "Chargement…";

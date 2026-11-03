@@ -96,10 +96,14 @@ function statistiques_() {
   // ---- Suivi
   var suivi = onglet_(ONGLET_SUIVI, ENTETES_SUIVI).getDataRange().getValues();
   var parJour = {}, visiteurs = {}, visiteursParJour = {}, pages = {}, actions = {}, appareils = {}, provenances = {}, quiz = [], secrets = {};
+  var recents = [], actifs = {}, maintenant = new Date().getTime();
   var visites = 0, clics = 0;
   for (var i = 1; i < suivi.length; i++) {
     var l = suivi[i]; if (!l[0]) continue;
     var j = jour(l[0]), type = String(l[1]), page = String(l[2]), action = String(l[3]), detail = String(l[4]), vis = String(l[5]), app = String(l[6]), prov = String(l[7]);
+    var t = new Date(l[0]).getTime();
+    if (maintenant - t < 5 * 60 * 1000) actifs[vis] = true;
+    recents.push({ t: t, type: type, page: page, action: action, detail: detail, visiteur: vis, appareil: app });
     if (type === "visite") {
       visites++;
       parJour[j] = (parJour[j] || 0) + 1;
@@ -116,6 +120,7 @@ function statistiques_() {
       if (action === "secret trouvé") secrets[detail] = (secrets[detail] || 0) + 1;
     }
   }
+  recents.sort(function (a, b) { return b.t - a.t; }); recents = recents.slice(0, 40);
   var jours = Object.keys(parJour).sort();
   var serieJours = jours.map(function (k) { return { jour: k, visites: parJour[k], visiteurs: Object.keys(visiteursParJour[k]).length }; });
 
@@ -141,6 +146,7 @@ function statistiques_() {
   for (var m = 1; m < msgs.length; m++) { if (String(msgs[m][1]) === "Mot") mots++; else if (String(msgs[m][1]) === "Souvenir") souvenirs++; }
 
   return { ok: true, genere: new Date().toISOString(), visites: visites, visiteurs: Object.keys(visiteurs).length, clics: clics,
+           actifs: Object.keys(actifs).length, recents: recents,
            parJour: serieJours, pages: pages, actions: actions, appareils: appareils, provenances: provenances, quiz: quiz, secrets: secrets,
            rsvp: r, mots: mots, souvenirs: souvenirs };
 }
