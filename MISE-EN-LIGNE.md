@@ -28,6 +28,8 @@ Si tu modifies le script plus tard : **Déployer > Gérer les déploiements > cr
 |---|---|---|
 | RSVP | Une ligne par réponse au formulaire | Le site |
 | Messages | Les mots pour Sébastianne (type « Mot ») et les souvenirs du quiz (type « Souvenir ») | Le site |
+| Cadeau | Les idées de cadeau (type « idee », colonne Afficher pour en retirer une) et les votes (un par visiteur et par idée, un « retrait » annule) | Le site |
+| Suivi | Visites et clics anonymes | Le site |
 
 Dans « Messages », la colonne **Afficher sur le site** vaut « Oui » pour les mots (ils apparaissent sur le site dans les minutes qui suivent) et « Non » pour les souvenirs (privés, pour le discours). Pour retirer un mot du site, passe la cellule à « Non » ; pour le supprimer, efface la ligne.
 

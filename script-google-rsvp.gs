@@ -10,10 +10,12 @@ var CLE_TABLEAU = "omonville-2027";   // clé du tableau de bord : change-la si 
 var ONGLET_RSVP = "RSVP";
 var ONGLET_MESSAGES = "Messages";
 var ONGLET_SUIVI = "Suivi";
+var ONGLET_CADEAU = "Cadeau";
 var ENTETES_RSVP = ["Date de réponse", "Nom", "Contact", "Barbecue samedi midi", "Soirée cocktail",
                     "Brunch dimanche", "Absent", "Adultes", "Enfants", "Message"];
 var ENTETES_MESSAGES = ["Date", "Type", "Prénom", "Message", "Signé", "Afficher sur le site"];
 var ENTETES_SUIVI = ["Date", "Type", "Page", "Action", "Détail", "Visiteur", "Appareil", "Provenance"];
+var ENTETES_CADEAU = ["Date", "Type", "Id", "Idée", "Description", "Proposé par", "Visiteur", "Afficher"];
 
 function doPost(e) {
   try {
@@ -21,6 +23,16 @@ function doPost(e) {
     if (d.type === "visite" || d.type === "clic") {
       onglet_(ONGLET_SUIVI, ENTETES_SUIVI).appendRow([new Date(), d.type, d.page || "", d.action || "",
         String(d.detail || "").slice(0, 80), d.visiteur || "", d.appareil || "", String(d.provenance || "").slice(0, 120)]);
+      return reponse_({ ok: true });
+    }
+    if (d.type === "idee") {
+      var id = "i" + new Date().getTime().toString(36);
+      onglet_(ONGLET_CADEAU, ENTETES_CADEAU).appendRow([new Date(), "idee", id, String(d.titre || "").slice(0, 120),
+        String(d.description || "").slice(0, 600), String(d.prenom || "").slice(0, 60), d.visiteur || "", "Oui"]);
+      return reponse_({ ok: true, id: id });
+    }
+    if (d.type === "vote") {
+      onglet_(ONGLET_CADEAU, ENTETES_CADEAU).appendRow([new Date(), d.retrait ? "retrait" : "vote", String(d.id || ""), "", "", "", d.visiteur || "", ""]);
       return reponse_({ ok: true });
     }
     if (d.type === "mot" || d.type === "souvenir") {
@@ -40,6 +52,7 @@ function doPost(e) {
 function doGet(e) {
   var p = (e && e.parameter) || {};
   if (p.type === "mots") return reponse_({ ok: true, mots: motsAffiches_() });
+  if (p.type === "cadeau") return reponse_({ ok: true, idees: idees_() });
   if (p.type === "stats") {
     if (p.cle !== CLE_TABLEAU) return reponse_({ ok: false, erreur: "mauvaise clé" });
     return reponse_(statistiques_());
@@ -58,6 +71,22 @@ function motsAffiches_() {
   }
   mots.reverse();
   return mots;
+}
+
+// Idées de cadeau avec leur nombre de votes (un vote par visiteur et par idée ; un « retrait » annule le vote).
+function idees_() {
+  var lignes = onglet_(ONGLET_CADEAU, ENTETES_CADEAU).getDataRange().getValues();
+  var idees = {}, ordre = [], votes = {};
+  for (var i = 1; i < lignes.length; i++) {
+    var l = lignes[i], type = String(l[1]), id = String(l[2]);
+    if (type === "idee" && String(l[7]).toLowerCase() === "oui" && id) {
+      idees[id] = { id: id, titre: String(l[3]), description: String(l[4]), par: String(l[5]), votes: 0 }; ordre.push(id);
+    } else if (type === "vote" || type === "retrait") {
+      votes[id] = votes[id] || {}; votes[id][String(l[6])] = (type === "vote");
+    }
+  }
+  ordre.forEach(function (id) { var v = votes[id] || {}; idees[id].votes = Object.keys(v).filter(function (k) { return v[k]; }).length; });
+  return ordre.map(function (id) { return idees[id]; });
 }
 
 function statistiques_() {
