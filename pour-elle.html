@@ -465,7 +465,7 @@
     <ul id="menu-liens">
       <li><a href="index.html#lieu">Le lieu</a></li>
       <li><a href="index.html#programme">Le week-end</a></li>
-      <li><a href="ou-dormir.html">Où dormir</a></li>
+      <li><a href="ou-dormir.html" data-suivi="menu" data-suivi-detail="Où dormir">Où dormir</a></li>
       <li><a class="quiz-lien" href="index.html#quiz">Le quiz</a></li>
       <li><a href="pour-elle.html" aria-current="page">Un mot pour elle</a></li>
       <li><a href="index.html#photos">Les photos</a></li>
@@ -512,7 +512,7 @@
         <p class="chapo">Quand le groupe rangera ses instruments, c'est votre playlist qui prendra le relais. Ajoutez les titres qui la feront chanter trop fort : ses classiques, vos tubes honteux, tout est accepté.</p>
         <p class="aide-playlist">Le groupe de jazz a son propre répertoire et ne prend pas de demandes ; la playlist, elle, est à vous.</p>
       </div>
-      <a class="btn plein lien-playlist" href="https://open.spotify.com/playlist/2r473R1x2FNaMOPH7pygeH?si=65959b51260e46b5" id="lien-playlist">Ouvrir la playlist Spotify</a>
+      <a class="btn plein lien-playlist" href="https://open.spotify.com/playlist/2r473R1x2FNaMOPH7pygeH?si=65959b51260e46b5" id="lien-playlist" data-suivi="playlist">Ouvrir la playlist Spotify</a>
     </div>
   </div>
 </section>
@@ -547,7 +547,7 @@
       if (!d) return;
       if (URL_RSVP.indexOf("http") !== 0) { r.className = "retour erreur"; r.textContent = "Pas encore relié au tableau. Répondez sur le groupe WhatsApp en attendant."; return; }
       b.disabled = true; var txt = b.textContent; b.textContent = "Envoi en cours…";
-      envoyer(d).then(function(){ r.className = "retour ok"; r.textContent = merci(d); f.reset(); if (d.type === "mot") { ajouterMotLocal(d); } })
+      envoyer(d).then(function(){ r.className = "retour ok"; r.textContent = merci(d); f.reset(); if (window.suivre) window.suivre(d.type === "mot" ? "mot déposé" : "souvenir envoyé"); if (d.type === "mot") { ajouterMotLocal(d); } })
         .catch(function(){ r.className = "retour erreur"; r.textContent = "L'envoi n'a pas abouti. Réessayez dans un instant."; })
         .finally(function(){ b.disabled = false; b.textContent = txt; });
     });
@@ -578,6 +578,26 @@
     return { type: "mot", prenom: prenom, message: message, signe: signe };
   }, function(d){ return "Merci" + (d.prenom ? " " + d.prenom : "") + ", votre mot est au chaud. Elle le découvrira le 15 mai."; });
 
+</script>
+
+<script>
+  // ---- Suivi anonyme des visites et des clics (aucune donnée personnelle) ----
+  (function(){
+    var URL_SUIVI = "https://script.google.com/macros/s/AKfycbw3cOujv4CUzJufGmCbsotOUCEsxLYHkGtwPWrOPwkS1arf5JWrKvyp7iy8r1ZpWPcn/exec";
+    var page = (location.pathname.split("/").pop() || "index.html").replace(".html","") || "index";
+    var visiteur; try { visiteur = localStorage.getItem("v60"); if (!visiteur) { visiteur = Math.random().toString(36).slice(2,10); localStorage.setItem("v60", visiteur); } } catch(e){ visiteur = "anonyme"; }
+    var appareil = window.innerWidth < 821 ? "téléphone" : "ordinateur";
+    function envoi(d){ d.page = page; d.visiteur = visiteur; d.appareil = appareil; d.provenance = document.referrer || "";
+      try { fetch(URL_SUIVI, { method:"POST", mode:"no-cors", keepalive:true, headers:{ "Content-Type":"text/plain;charset=utf-8" }, body: JSON.stringify(d) }); } catch(e){} }
+    window.suivre = function(action, detail){ envoi({ type:"clic", action:action, detail: detail == null ? "" : String(detail) }); };
+    envoi({ type:"visite" });
+    document.addEventListener("click", function(e){
+      var a = e.target.closest("a, button"); if (!a) return;
+      var s = a.getAttribute("data-suivi"); if (s) { window.suivre(s, a.getAttribute("data-suivi-detail") || a.textContent.trim().slice(0,60)); return; }
+      var href = a.getAttribute("href") || "";
+      if (/^https?:/.test(href)) window.suivre("lien externe", href.replace(/^https?:\/\//,"").split("/")[0]);
+    });
+  })();
 </script>
 </body>
 </html>

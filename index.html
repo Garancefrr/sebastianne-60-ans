@@ -460,11 +460,11 @@
     <ul id="menu-liens">
       <li><a href="#lieu">Le lieu</a></li>
       <li><a href="#programme">Le week-end</a></li>
-      <li><a href="ou-dormir.html">Où dormir</a></li>
+      <li><a href="ou-dormir.html" data-suivi="menu" data-suivi-detail="Où dormir">Où dormir</a></li>
       <li><a class="quiz-lien" href="#quiz">Le quiz</a></li>
-      <li><a href="pour-elle.html">Un mot pour elle</a></li>
+      <li><a href="pour-elle.html" data-suivi="menu" data-suivi-detail="Un mot pour elle">Un mot pour elle</a></li>
       <li><a href="#photos">Les photos</a></li>
-      <li><a class="cta ouvrir-rsvp" href="#rsvp">Répondre</a></li>
+      <li><a class="cta ouvrir-rsvp" href="#rsvp" data-suivi="bouton confirmer" data-suivi-detail="menu">Répondre</a></li>
     </ul>
   </div>
 </nav>
@@ -492,8 +492,8 @@
         <span class="lieu">À Omonville, en Normandie. Un lundi férié pour rentrer sans se presser.</span>
       </div>
       <div class="boutons">
-        <a class="btn plein ouvrir-rsvp" href="#rsvp">Confirmer ma venue</a>
-        <a class="btn vide" href="#quiz">Faire le quiz</a>
+        <a class="btn plein ouvrir-rsvp" href="#rsvp" data-suivi="bouton confirmer" data-suivi-detail="accueil">Confirmer ma venue</a>
+        <a class="btn vide" href="#quiz" data-suivi="bouton quiz" data-suivi-detail="accueil">Faire le quiz</a>
       </div>
     </div>
     <div class="hero-polas" aria-hidden="true">
@@ -566,7 +566,7 @@
     </div>
     <div class="teaser-quiz">
       <p>Vous pensez bien la connaître ? Huit questions pour le prouver.</p>
-      <a class="btn vide" href="#quiz">Faire le quiz</a>
+      <a class="btn vide" href="#quiz" data-suivi="bouton quiz" data-suivi-detail="accueil">Faire le quiz</a>
     </div>
   </div>
 </section>
@@ -692,7 +692,7 @@
   <div class="wrap rsvp-court">
     <h2>Vous venez ?</h2>
     <p class="chapo">Dites-nous à quels moments vous serez là : le barbecue du samedi midi, la soirée cocktail, le brunch du dimanche. Une réponse par foyer suffit, et si ça change, revenez nous le dire, on ne se vexe pas.</p>
-    <button type="button" class="btn plein ouvrir-rsvp">Confirmer ma venue</button>
+    <button type="button" class="btn plein ouvrir-rsvp" data-suivi="bouton confirmer" data-suivi-detail="section ou barre">Confirmer ma venue</button>
     <p class="contact">Une question, une idée, un doute sur la tenue ? Garance, Mérédith et Valère sont sur le groupe WhatsApp de la fête, et répondent plus vite que maman.</p>
   </div>
 </section>
@@ -791,7 +791,7 @@
   </div>
 </section>
 
-<div class="barre-mobile"><button type="button" class="btn plein ouvrir-rsvp">Confirmer ma venue</button></div>
+<div class="barre-mobile"><button type="button" class="btn plein ouvrir-rsvp" data-suivi="bouton confirmer" data-suivi-detail="section ou barre">Confirmer ma venue</button></div>
 
 <footer>
   <div class="wrap">
@@ -874,6 +874,7 @@
     fetch(URL_RSVP, { method:"POST", mode:"no-cors", headers:{ "Content-Type":"text/plain;charset=utf-8" }, body: JSON.stringify(donnees) })
       .then(function(){
         afficher("ok", "Merci " + nom + ", c'est noté avec soin. On a hâte de vous voir en Normandie.");
+        if (window.suivre) window.suivre("réponse envoyée", donnees.absent === "Oui" ? "absent" : "présent");
         form.reset();
       })
       .catch(function(){ afficher("erreur", "L'envoi n'a pas abouti. Vérifiez votre connexion et réessayez, ou répondez sur le groupe WhatsApp."); })
@@ -895,6 +896,7 @@
     if (compteur) compteur.textContent = n >= 8 ? "Les huit secrets sont trouvés. Bah Dominiqueeeeee ! Vous êtes officiellement prêts pour la soirée." : "Huit petits secrets sont cachés dans cette page : cherchez les losanges dorés qui scintillent. Trouvés : " + n + " sur 8.";
   }
   function secret(cle, texte){
+    if (!trouves[cle] && window.suivre) window.suivre("secret trouvé", cle);
     trouves[cle] = true;
     var el = document.getElementById("secret-" + cle); if (el) el.classList.add("trouve");
     try { localStorage.setItem("secrets60", JSON.stringify(trouves)); } catch(e) {}
@@ -972,6 +974,7 @@
           else msg = "Vous avez tout le week-end pour rattraper ça. Commencez par lui parler italien.";
           s.innerHTML = "<strong>" + points + " sur " + questions.length + "</strong><p>" + msg + "</p>";
           s.classList.add("visible");
+          if (window.suivre) window.suivre("quiz terminé", points);
           document.getElementById("form-souvenir").classList.add("visible");
           s.scrollIntoView({ behavior: "smooth", block: "nearest" });
         }
@@ -1023,7 +1026,7 @@
       if (!d) return;
       if (URL_RSVP.indexOf("http") !== 0) { r.className = "retour erreur"; r.textContent = "Pas encore relié au tableau. Répondez sur le groupe WhatsApp en attendant."; return; }
       b.disabled = true; var txt = b.textContent; b.textContent = "Envoi en cours…";
-      envoyer(d).then(function(){ r.className = "retour ok"; r.textContent = merci(d); f.reset(); })
+      envoyer(d).then(function(){ r.className = "retour ok"; r.textContent = merci(d); f.reset(); if (window.suivre) window.suivre(d.type === "mot" ? "mot déposé" : "souvenir envoyé"); })
         .catch(function(){ r.className = "retour erreur"; r.textContent = "L'envoi n'a pas abouti. Réessayez dans un instant."; })
         .finally(function(){ b.disabled = false; b.textContent = txt; });
     });
@@ -1035,6 +1038,26 @@
     if (!message) { document.getElementById("retour-souvenir").className = "retour erreur"; document.getElementById("retour-souvenir").textContent = "Racontez-nous au moins une ligne."; return null; }
     return { type: "souvenir", prenom: prenom, message: message, signe: true };
   }, function(d){ return "Merci" + (d.prenom ? " " + d.prenom : "") + ". Ce souvenir servira au discours, et peut-être à la faire pleurer un peu."; });
+</script>
+
+<script>
+  // ---- Suivi anonyme des visites et des clics (aucune donnée personnelle) ----
+  (function(){
+    var URL_SUIVI = "https://script.google.com/macros/s/AKfycbw3cOujv4CUzJufGmCbsotOUCEsxLYHkGtwPWrOPwkS1arf5JWrKvyp7iy8r1ZpWPcn/exec";
+    var page = (location.pathname.split("/").pop() || "index.html").replace(".html","") || "index";
+    var visiteur; try { visiteur = localStorage.getItem("v60"); if (!visiteur) { visiteur = Math.random().toString(36).slice(2,10); localStorage.setItem("v60", visiteur); } } catch(e){ visiteur = "anonyme"; }
+    var appareil = window.innerWidth < 821 ? "téléphone" : "ordinateur";
+    function envoi(d){ d.page = page; d.visiteur = visiteur; d.appareil = appareil; d.provenance = document.referrer || "";
+      try { fetch(URL_SUIVI, { method:"POST", mode:"no-cors", keepalive:true, headers:{ "Content-Type":"text/plain;charset=utf-8" }, body: JSON.stringify(d) }); } catch(e){} }
+    window.suivre = function(action, detail){ envoi({ type:"clic", action:action, detail: detail == null ? "" : String(detail) }); };
+    envoi({ type:"visite" });
+    document.addEventListener("click", function(e){
+      var a = e.target.closest("a, button"); if (!a) return;
+      var s = a.getAttribute("data-suivi"); if (s) { window.suivre(s, a.getAttribute("data-suivi-detail") || a.textContent.trim().slice(0,60)); return; }
+      var href = a.getAttribute("href") || "";
+      if (/^https?:/.test(href)) window.suivre("lien externe", href.replace(/^https?:\/\//,"").split("/")[0]);
+    });
+  })();
 </script>
 </body>
 </html>

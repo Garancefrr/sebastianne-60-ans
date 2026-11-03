@@ -355,7 +355,7 @@
       <li><a href="index.html#programme">Le week-end</a></li>
       <li><a href="ou-dormir.html" aria-current="page">Où dormir</a></li>
       <li><a class="quiz-lien" href="index.html#quiz">Le quiz</a></li>
-      <li><a href="pour-elle.html">Un mot pour elle</a></li>
+      <li><a href="pour-elle.html" data-suivi="menu" data-suivi-detail="Un mot pour elle">Un mot pour elle</a></li>
       <li><a href="index.html#photos">Les photos</a></li>
       <li><a class="cta" href="index.html#rsvp">Répondre</a></li>
     </ul>
@@ -536,6 +536,26 @@
 <script>
   var menuBtn = document.querySelector(".menu-btn"), menu = document.getElementById("menu-liens");
   menuBtn.addEventListener("click", function(){ var o = menu.classList.toggle("ouvert"); menuBtn.setAttribute("aria-expanded", o ? "true" : "false"); });
+</script>
+
+<script>
+  // ---- Suivi anonyme des visites et des clics (aucune donnée personnelle) ----
+  (function(){
+    var URL_SUIVI = "https://script.google.com/macros/s/AKfycbw3cOujv4CUzJufGmCbsotOUCEsxLYHkGtwPWrOPwkS1arf5JWrKvyp7iy8r1ZpWPcn/exec";
+    var page = (location.pathname.split("/").pop() || "index.html").replace(".html","") || "index";
+    var visiteur; try { visiteur = localStorage.getItem("v60"); if (!visiteur) { visiteur = Math.random().toString(36).slice(2,10); localStorage.setItem("v60", visiteur); } } catch(e){ visiteur = "anonyme"; }
+    var appareil = window.innerWidth < 821 ? "téléphone" : "ordinateur";
+    function envoi(d){ d.page = page; d.visiteur = visiteur; d.appareil = appareil; d.provenance = document.referrer || "";
+      try { fetch(URL_SUIVI, { method:"POST", mode:"no-cors", keepalive:true, headers:{ "Content-Type":"text/plain;charset=utf-8" }, body: JSON.stringify(d) }); } catch(e){} }
+    window.suivre = function(action, detail){ envoi({ type:"clic", action:action, detail: detail == null ? "" : String(detail) }); };
+    envoi({ type:"visite" });
+    document.addEventListener("click", function(e){
+      var a = e.target.closest("a, button"); if (!a) return;
+      var s = a.getAttribute("data-suivi"); if (s) { window.suivre(s, a.getAttribute("data-suivi-detail") || a.textContent.trim().slice(0,60)); return; }
+      var href = a.getAttribute("href") || "";
+      if (/^https?:/.test(href)) window.suivre("lien externe", href.replace(/^https?:\/\//,"").split("/")[0]);
+    });
+  })();
 </script>
 </body>
 </html>

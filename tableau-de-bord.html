@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Tableau de bord - Les 60 ans de Sébastianne</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--nuit:#15161C;--nuit-2:#1E2029;--ivoire:#F7F1E6;--champagne:#EADFC8;--or:#C8A45A;--or-clair:#E3C98A;--bronze:#8B6A3A;--encre:#1A1A1F;--gris:#6A665E;--trait:#D6CBB5;--sauge:#7B8C6B;--rouge:#B5563F}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ivoire);color:var(--encre);font-family:"Jost",system-ui,sans-serif;font-weight:300;font-size:16px;line-height:1.5}
+  h1,h2,h3{font-family:"Cormorant Garamond",serif;font-weight:500;margin:0;line-height:1.1}
+  .wrap{width:min(1120px,100% - 2rem);margin-inline:auto}
+  header{background:var(--nuit);color:var(--champagne);padding:1.2rem 0;border-bottom:1px solid rgba(200,164,90,.35)}
+  header .wrap{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}
+  header h1{font-size:1.8rem;font-style:italic}
+  header .maj{font-size:.85rem;color:rgba(234,223,200,.65)}
+  header button{font:inherit;background:transparent;color:var(--or-clair);border:1px solid var(--or);padding:.4rem .9rem;cursor:pointer}
+  main{padding:2rem 0 4rem}
+  .grille{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-bottom:2rem}
+  .tuile{background:#fff;border:1px solid var(--trait);border-top:3px solid var(--or);padding:1rem 1.2rem}
+  .tuile .n{font-family:"Cormorant Garamond",serif;font-size:2.6rem;font-weight:500;line-height:1}
+  .tuile .l{color:var(--gris);font-size:.9rem;margin-top:.2rem}
+  .tuile .s{font-size:.85rem;color:var(--bronze);margin-top:.4rem}
+  section{margin-bottom:2.2rem}
+  section h2{font-size:1.7rem;font-style:italic;margin-bottom:.8rem}
+  .carte{background:#fff;border:1px solid var(--trait);padding:1.2rem 1.4rem}
+  .deux{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem}
+  /* barres */
+  .barres{display:flex;align-items:flex-end;gap:4px;height:160px;border-bottom:1px solid var(--trait);padding-bottom:0}
+  .barre{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;min-width:0;position:relative}
+  .barre i{display:block;width:100%;background:var(--or);border-radius:2px 2px 0 0}
+  .barre i.u{background:var(--nuit);opacity:.85;width:50%;position:absolute;bottom:0}
+  .barre b{position:absolute;top:-1.2rem;font-size:.7rem;font-weight:400;color:var(--gris)}
+  .axe{display:flex;gap:4px;margin-top:.3rem}
+  .axe span{flex:1;font-size:.65rem;color:var(--gris);text-align:center;min-width:0;overflow:hidden;white-space:nowrap}
+  .legende{font-size:.8rem;color:var(--gris);margin-top:.6rem}
+  .legende i{display:inline-block;width:10px;height:10px;margin-right:.3rem;vertical-align:middle}
+  /* listes à barres horizontales */
+  .lignes{display:grid;gap:.45rem}
+  .ligne{display:grid;grid-template-columns:minmax(120px,1fr) 2fr auto;gap:.8rem;align-items:center;font-size:.92rem}
+  .ligne .j{height:10px;background:var(--trait);border-radius:5px;overflow:hidden}
+  .ligne .j i{display:block;height:100%;background:var(--or)}
+  .ligne .v{font-weight:500;min-width:2ch;text-align:right}
+  table{width:100%;border-collapse:collapse;font-size:.9rem}
+  th,td{text-align:left;padding:.45rem .5rem;border-bottom:1px solid var(--trait)}
+  th{font-weight:500;color:var(--gris);font-size:.8rem;letter-spacing:.04em}
+  td.oui{color:var(--sauge);font-weight:500} td.non{color:var(--gris)}
+  .vide{color:var(--gris);font-style:italic}
+  /* accès */
+  .porte{max-width:420px;margin:4rem auto;background:#fff;border:1px solid var(--or);padding:2rem}
+  .porte h2{font-style:italic;margin-bottom:.8rem}
+  .porte p{color:var(--gris);font-size:.95rem}
+  .porte input{width:100%;font:inherit;padding:.7rem .9rem;border:1px solid var(--trait);margin:.6rem 0 1rem}
+  .porte button{font:inherit;background:var(--or);border:0;padding:.75rem 1.4rem;cursor:pointer;width:100%}
+  .erreur{color:var(--rouge);font-size:.9rem;margin-top:.6rem}
+  @media (max-width:760px){.deux{grid-template-columns:1fr}.tuile .n{font-size:2.1rem}.ligne{grid-template-columns:1fr 1.4fr auto}}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div><h1>Tableau de bord</h1><div class="maj" id="maj">Les 60 ans de Sébastianne</div></div>
+    <div><button type="button" id="rafraichir">Rafraîchir</button> <button type="button" id="sortir">Verrouiller</button></div>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="porte" id="porte">
+    <h2>Réservé aux organisateurs</h2>
+    <p>Entrez la clé du tableau de bord (celle qui est dans le script Google).</p>
+    <input type="password" id="cle" placeholder="clé" autocomplete="current-password">
+    <button type="button" id="entrer">Entrer</button>
+    <div class="erreur" id="porte-erreur"></div>
+  </div>
+
+  <div id="contenu" hidden>
+    <div class="grille">
+      <div class="tuile"><div class="n" id="t-visiteurs">–</div><div class="l">visiteurs différents</div><div class="s" id="t-visites"></div></div>
+      <div class="tuile"><div class="n" id="t-reponses">–</div><div class="l">réponses au formulaire</div><div class="s" id="t-absents"></div></div>
+      <div class="tuile"><div class="n" id="t-personnes">–</div><div class="l">personnes attendues</div><div class="s" id="t-detail-personnes"></div></div>
+      <div class="tuile"><div class="n" id="t-soiree">–</div><div class="l">à la soirée cocktail</div><div class="s" id="t-moments"></div></div>
+      <div class="tuile"><div class="n" id="t-mots">–</div><div class="l">mots pour Sébastianne</div><div class="s" id="t-souvenirs"></div></div>
+      <div class="tuile"><div class="n" id="t-quiz">–</div><div class="l">quiz terminés</div><div class="s" id="t-quiz-moy"></div></div>
+    </div>
+
+    <section>
+      <h2>Visites par jour</h2>
+      <div class="carte">
+        <div class="barres" id="g-jours"></div>
+        <div class="axe" id="g-jours-axe"></div>
+        <div class="legende"><i style="background:var(--or)"></i>pages vues <i style="background:var(--nuit)"></i>visiteurs différents</div>
+      </div>
+    </section>
+
+    <div class="deux">
+      <section><h2>Où les gens cliquent</h2><div class="carte"><div class="lignes" id="l-actions"></div></div></section>
+      <section><h2>Pages vues</h2><div class="carte"><div class="lignes" id="l-pages"></div><h3 style="margin:1.2rem 0 .5rem;font-size:1.2rem">Appareils</h3><div class="lignes" id="l-appareils"></div><h3 style="margin:1.2rem 0 .5rem;font-size:1.2rem">D'où viennent-ils</h3><div class="lignes" id="l-provenances"></div></div></section>
+    </div>
+
+    <div class="deux">
+      <section><h2>Scores au quiz</h2><div class="carte"><div class="lignes" id="l-quiz"></div></div></section>
+      <section><h2>Secrets trouvés</h2><div class="carte"><div class="lignes" id="l-secrets"></div></div></section>
+    </div>
+
+    <section>
+      <h2>Dernières réponses</h2>
+      <div class="carte" style="overflow:auto">
+        <table><thead><tr><th>Date</th><th>Nom</th><th>Barbecue</th><th>Soirée</th><th>Brunch</th><th>Adultes</th><th>Enfants</th></tr></thead><tbody id="t-dernieres"></tbody></table>
+      </div>
+    </section>
+  </div>
+</main>
+
+<script>
+  var URL_SCRIPT = "https://script.google.com/macros/s/AKfycbw3cOujv4CUzJufGmCbsotOUCEsxLYHkGtwPWrOPwkS1arf5JWrKvyp7iy8r1ZpWPcn/exec";
+  var porte = document.getElementById("porte"), contenu = document.getElementById("contenu"), erreur = document.getElementById("porte-erreur");
+  var cle = ""; try { cle = sessionStorage.getItem("cle60") || ""; } catch(e){}
+
+  function $(id){ return document.getElementById(id); }
+  function nb(x){ return (x || 0).toLocaleString("fr-FR"); }
+  function lignes(id, obj, ordre){
+    var el = $(id); el.innerHTML = "";
+    var entrees = Object.keys(obj || {}).map(function(k){ return [k, obj[k]]; });
+    if (ordre) entrees.sort(ordre); else entrees.sort(function(a,b){ return b[1]-a[1]; });
+    if (!entrees.length) { el.innerHTML = '<p class="vide">Rien pour l\'instant.</p>'; return; }
+    var max = Math.max.apply(null, entrees.map(function(e){ return e[1]; })) || 1;
+    entrees.forEach(function(e){
+      var d = document.createElement("div"); d.className = "ligne";
+      d.innerHTML = '<span></span><div class="j"><i style="width:' + Math.round(e[1]/max*100) + '%"></i></div><span class="v"></span>';
+      d.firstChild.textContent = e[0]; d.lastChild.textContent = nb(e[1]); el.appendChild(d);
+    });
+  }
+  function rendre(s){
+    $("maj").textContent = "Mis à jour le " + new Date(s.genere).toLocaleString("fr-FR", { dateStyle:"medium", timeStyle:"short" });
+    $("t-visiteurs").textContent = nb(s.visiteurs); $("t-visites").textContent = nb(s.visites) + " pages vues, " + nb(s.clics) + " clics";
+    $("t-reponses").textContent = nb(s.rsvp.reponses); $("t-absents").textContent = s.rsvp.absents ? nb(s.rsvp.absents) + " ne pourront pas venir" : "";
+    $("t-personnes").textContent = nb(s.rsvp.adultes + s.rsvp.enfants); $("t-detail-personnes").textContent = nb(s.rsvp.adultes) + " adultes, " + nb(s.rsvp.enfants) + " enfants";
+    $("t-soiree").textContent = nb(s.rsvp.soiree); $("t-moments").textContent = "barbecue " + nb(s.rsvp.barbecue) + " · brunch " + nb(s.rsvp.brunch);
+    $("t-mots").textContent = nb(s.mots); $("t-souvenirs").textContent = nb(s.souvenirs) + " souvenirs envoyés";
+    $("t-quiz").textContent = nb(s.quiz.length);
+    $("t-quiz-moy").textContent = s.quiz.length ? "moyenne " + (s.quiz.reduce(function(a,b){return a+b;},0)/s.quiz.length).toFixed(1) + " / 8" : "";
+
+    // graphique par jour (14 derniers jours)
+    var g = $("g-jours"), ax = $("g-jours-axe"); g.innerHTML = ""; ax.innerHTML = "";
+    var serie = (s.parJour || []).slice(-14);
+    if (!serie.length) { g.innerHTML = '<p class="vide">Pas encore de visite enregistrée.</p>'; }
+    var max = Math.max.apply(null, serie.map(function(d){ return d.visites; }).concat([1]));
+    serie.forEach(function(d){
+      var b = document.createElement("div"); b.className = "barre";
+      b.innerHTML = '<b>' + d.visites + '</b><i style="height:' + Math.round(d.visites/max*100) + '%"></i><i class="u" style="height:' + Math.round(d.visiteurs/max*100) + '%"></i>';
+      g.appendChild(b);
+      var sp = document.createElement("span"); sp.textContent = d.jour.slice(8,10) + "/" + d.jour.slice(5,7); ax.appendChild(sp);
+    });
+
+    var actions = {}; var secrets = {};
+    Object.keys(s.actions || {}).forEach(function(k){ actions[k] = s.actions[k]; });
+    lignes("l-actions", actions);
+    lignes("l-pages", s.pages);
+    lignes("l-appareils", s.appareils);
+    lignes("l-provenances", s.provenances);
+    var scores = {}; for (var i = 0; i <= 8; i++) scores[i + " / 8"] = 0; (s.quiz || []).forEach(function(q){ var k = Math.min(8, Math.max(0, q)) + " / 8"; scores[k]++; });
+    lignes("l-quiz", scores, function(a,b){ return parseInt(a[0]) - parseInt(b[0]); });
+    var noms = { coupe:"La coupe (accueil)", date:"La date", palmier:"Le palmier (photo)", tenue:"La tenue", sign:"La signature", absent:"Le formulaire", village:"Omonville", brunch:"Le brunch" };
+    var sec = {}; Object.keys(s.secrets || {}).forEach(function(k){ sec[noms[k] || k] = s.secrets[k]; }); lignes("l-secrets", sec);
+    var tb = $("t-dernieres"); tb.innerHTML = "";
+    if (!s.rsvp.dernieres.length) tb.innerHTML = '<tr><td colspan="7" class="vide">Aucune réponse pour l\'instant.</td></tr>';
+    s.rsvp.dernieres.forEach(function(r){
+      var tr = document.createElement("tr");
+      function td(v, cls){ var c = document.createElement("td"); c.textContent = v; if (cls) c.className = cls; return c; }
+      tr.appendChild(td(r.date.slice(8,10) + "/" + r.date.slice(5,7))); tr.appendChild(td(r.nom + (r.absent === "Oui" ? " (absent)" : "")));
+      ["barbecue","soiree","brunch"].forEach(function(k){ tr.appendChild(td(r[k] === "Oui" ? "oui" : "–", r[k] === "Oui" ? "oui" : "non")); });
+      tr.appendChild(td(r.adultes)); tr.appendChild(td(r.enfants)); tb.appendChild(tr);
+    });
+  }
+  function charger(){
+    if (!cle) return;
+    $("maj").textContent = "Chargement…";
+    fetch(URL_SCRIPT + "?type=stats&cle=" + encodeURIComponent(cle)).then(function(r){ return r.json(); }).then(function(s){
+      if (!s.ok) { porte.hidden = false; contenu.hidden = true; erreur.textContent = "Clé refusée."; return; }
+      porte.hidden = true; contenu.hidden = false; erreur.textContent = ""; rendre(s);
+    }).catch(function(){ erreur.textContent = "Impossible de joindre le script Google. Vérifiez le déploiement."; $("maj").textContent = "Erreur de chargement"; });
+  }
+  $("entrer").addEventListener("click", function(){ cle = $("cle").value.trim(); try { sessionStorage.setItem("cle60", cle); } catch(e){} charger(); });
+  $("cle").addEventListener("keydown", function(e){ if (e.key === "Enter") $("entrer").click(); });
+  $("rafraichir").addEventListener("click", charger);
+  $("sortir").addEventListener("click", function(){ cle = ""; try { sessionStorage.removeItem("cle60"); } catch(e){} porte.hidden = false; contenu.hidden = true; $("cle").value = ""; });
+  if (cle) charger();
+</script>
+</body>
+</html>

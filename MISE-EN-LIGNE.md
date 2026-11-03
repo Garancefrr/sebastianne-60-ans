@@ -56,3 +56,10 @@ Tout est dans `index.html`, en clair :
 - le texte d'accueil : section `class="hero"`.
 
 Après modification, redépose le fichier sur Netlify (ou pousse sur GitHub pour Vercel).
+
+## Le tableau de bord (réservé aux organisateurs)
+
+Adresse : `https://garancefrr.github.io/sebastianne-60-ans/tableau-de-bord.html` (elle n'apparaît nulle part sur le site, ne la partage pas).
+Clé d'accès : la valeur de `CLE_TABLEAU` au début de `script-google-rsvp.gs` (par défaut `omonville-2027`). Pour la changer : modifie-la dans le script et redéploie une nouvelle version.
+
+Il affiche : visiteurs différents et pages vues par jour, où les gens cliquent, pages consultées, téléphone ou ordinateur, provenance, scores au quiz, secrets trouvés, réponses au formulaire (personnes attendues par moment) et dernières réponses. Les données brutes sont dans l'onglet **Suivi** du tableau. Le suivi est anonyme : un identifiant aléatoire par navigateur, aucun nom.
