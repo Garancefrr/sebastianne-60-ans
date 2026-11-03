@@ -20,6 +20,17 @@ Deux étapes : relier le formulaire au tableau Google (5 min), puis héberger la
 
 Si tu modifies le script plus tard : **Déployer > Gérer les déploiements > crayon > Nouvelle version > Déployer**. L'URL ne change pas.
 
+**Important (version de novembre 2026) :** le script a été enrichi (mots et souvenirs). Recolle la nouvelle version de `script-google-rsvp.gs` et crée une **nouvelle version** du déploiement, sinon le mur des mots restera vide.
+
+## Les onglets du tableau « Anniversaire Maman »
+
+| Onglet | Contenu | Rempli par |
+|---|---|---|
+| RSVP | Une ligne par réponse au formulaire | Le site |
+| Messages | Les mots pour Sébastianne (type « Mot ») et les souvenirs du quiz (type « Souvenir ») | Le site |
+
+Dans « Messages », la colonne **Afficher sur le site** vaut « Oui » pour les mots (ils apparaissent sur le site dans les minutes qui suivent) et « Non » pour les souvenirs (privés, pour le discours). Pour retirer un mot du site, passe la cellule à « Non » ; pour le supprimer, efface la ligne.
+
 ## 2. Héberger la page (gratuit)
 
 ### Option A : Netlify Drop (le plus simple, sans compte technique)
