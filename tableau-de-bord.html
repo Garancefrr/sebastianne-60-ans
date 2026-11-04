@@ -36,6 +36,7 @@
   .direct-tete .l{color:var(--gris)}
   .auto{margin-left:auto;font-size:.85rem;color:var(--gris);display:flex;gap:.4rem;align-items:center}
   .fil{list-style:none;margin:0;padding:0;max-height:260px;overflow:auto;border-top:1px solid var(--trait)}
+  .fil li.vide{display:block;padding:.8rem 0}
   .fil li{display:grid;grid-template-columns:5.5rem 1fr auto;gap:.8rem;padding:.4rem 0;border-bottom:1px solid var(--trait);font-size:.9rem;align-items:baseline}
   .fil .h{color:var(--gris);font-variant-numeric:tabular-nums}
   .fil .q{color:var(--gris);font-size:.8rem}
@@ -172,9 +173,10 @@
 
     derniereStats = s; graphique();
     // en ce moment
-    $("t-actifs").textContent = nb(s.actifs);
+    $("t-actifs").textContent = ("actifs" in s) ? nb(s.actifs) : "?";
     var fil = $("fil"); fil.innerHTML = "";
-    if (!(s.recents || []).length) fil.innerHTML = '<li class="vide">Aucune activité enregistrée pour l\'instant.</li>';
+    if (!("recents" in s)) fil.innerHTML = '<li class="vide">Le script Google en ligne est une ancienne version : recollez la dernière version de script-google-rsvp.gs et créez une nouvelle version du déploiement pour voir l\'activité en direct.</li>';
+    else if (!s.recents.length) fil.innerHTML = '<li class="vide">Aucune activité enregistrée pour l\'instant.</li>';
     (s.recents || []).forEach(function(r){
       var li = document.createElement("li");
       var d = new Date(r.t), h = d.toLocaleTimeString("fr-FR", { hour:"2-digit", minute:"2-digit" }), auj = d.toDateString() === new Date().toDateString();
