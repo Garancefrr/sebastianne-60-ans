@@ -55,10 +55,10 @@
 
   /* Navigation */
   nav{position:sticky;top:0;z-index:5;background:rgba(21,22,28,.94);backdrop-filter:blur(8px);border-bottom:1px solid var(--trait-nuit)}
-  nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:1rem;min-height:3.6rem;flex-wrap:wrap}
-  nav .marque{font-family:"Cormorant Garamond",serif;font-size:1.3rem;font-style:italic;color:var(--champagne);text-decoration:none}
-  nav ul{list-style:none;margin:0;padding:0;display:flex;gap:1.15rem;flex-wrap:wrap;align-items:center}
-  nav ul a{color:var(--champagne);text-decoration:none;font-weight:400;font-size:.86rem;letter-spacing:.04em;border-bottom:1px solid transparent;padding:.2rem 0}
+  nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:1rem;min-height:3.6rem;flex-wrap:wrap;width:min(1180px,100% - 2.5rem)}
+  nav .marque{font-family:"Cormorant Garamond",serif;font-size:1.2rem;font-style:italic;color:var(--champagne);text-decoration:none}
+  nav ul{list-style:none;margin:0;padding:0;display:flex;gap:1rem;flex-wrap:wrap;align-items:center}
+  nav ul a{color:var(--champagne);text-decoration:none;font-weight:400;font-size:.84rem;letter-spacing:.03em;border-bottom:1px solid transparent;padding:.2rem 0}
   nav ul a:hover{border-color:var(--or)}
   nav ul a.cta{border:1px solid var(--or);color:var(--or-clair);padding:.4rem .9rem}
   nav ul a.cta:hover{background:var(--or);color:var(--nuit)}
@@ -452,6 +452,20 @@
   nav ul a[aria-current]{border-color:var(--or)}
   .barre-mobile{display:none}
   @media (max-width:820px){.barre-mobile{display:block;transform:none}}
+  .apercu{margin:-.4rem 0 1.2rem}
+  .apercu img{display:block;max-width:220px;max-height:220px;border:4px solid #fff;box-shadow:0 8px 20px rgba(0,0,0,.3)}
+  input[type=file]{width:100%;font:inherit;font-weight:300;color:var(--champagne);padding:.5rem 0}
+  input[type=file]::file-selector-button{font:inherit;background:transparent;color:var(--or-clair);border:1px solid var(--or);padding:.5rem .9rem;margin-right:.8rem;cursor:pointer}
+  .mur-mini{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:1rem;align-content:start}
+  .mur-mini .pola{width:100%;padding:6px 6px 8px;margin:0}
+  .mur-mini .pola img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover}
+  .mur-mini .pola figcaption{font-size:.85rem;margin-top:.4rem}
+  #photo-invites h2{color:var(--champagne)}
+  #photo-invites .mots-vide{color:rgba(234,223,200,.65)}
+  #photo-invites .pola{background:#fff;box-shadow:0 10px 24px rgba(0,0,0,.35);transform:rotate(var(--rot,0deg));position:relative}
+  #photo-invites .pola::after{content:"";position:absolute;left:50%;top:-8px;width:40px;height:12px;transform:translateX(-50%) rotate(-2deg);background:rgba(200,164,90,.6);border:1px solid rgba(200,164,90,.8)}
+  #photo-invites .pola figcaption{font-family:"Cormorant Garamond",serif;font-style:italic;color:var(--encre);text-align:center;line-height:1.2}
+  #photo-invites .pola .qui{display:block;font-family:"Jost",sans-serif;font-style:normal;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase;color:var(--bronze);margin-top:.3rem}
 </style>
 </head>
 <body>
@@ -469,6 +483,7 @@
       <li><a class="quiz-lien" href="index.html#quiz">Le quiz</a></li>
       <li><a href="pour-elle.html" aria-current="page">Un mot pour elle</a></li>
       <li><a href="cadeau.html" data-suivi="menu" data-suivi-detail="Le cadeau">Le cadeau</a></li>
+      <li><a href="playlist.html" data-suivi="menu" data-suivi-detail="La playlist">La playlist</a></li>
       <li><a href="index.html#photos">Les photos</a></li>
       <li><a class="cta" href="index.html#rsvp">Répondre</a></li>
     </ul>
@@ -505,19 +520,33 @@
   </div>
 </section>
 
-<section id="playlist" class="alt">
+
+<section id="photo-invites" class="alt">
   <div class="wrap">
-    <div class="playlist">
-      <div>
-        <h2>La playlist de l'après-jazz</h2>
-        <p class="chapo">Quand le groupe rangera ses instruments, c'est votre playlist qui prendra le relais. Ajoutez les titres qui la feront chanter trop fort : ses classiques, vos tubes honteux, tout est accepté.</p>
-        <p class="aide-playlist">Le groupe de jazz a son propre répertoire et ne prend pas de demandes ; la playlist, elle, est à vous.</p>
-      </div>
-      <a class="btn plein lien-playlist" href="https://open.spotify.com/playlist/2r473R1x2FNaMOPH7pygeH?si=65959b51260e46b5" id="lien-playlist" data-suivi="playlist">Ouvrir la playlist Spotify</a>
+    <h2>Ajoutez une photo au mur</h2>
+    <p class="chapo">Vous avez une photo d'elle qui mérite le mur ? Envoyez-la avec une légende, douce ou taquine. Elle rejoindra les autres sur la page d'accueil, et le 15 mai dans le carnet.</p>
+    <div class="mots-grid">
+      <form id="form-photo" class="form-mot" novalidate>
+        <div class="champ">
+          <label for="photo-fichier">La photo <span class="aide">(JPG ou PNG, prise avec le téléphone c'est parfait)</span></label>
+          <input type="file" id="photo-fichier" name="fichier" accept="image/*">
+        </div>
+        <div class="apercu" id="photo-apercu" hidden><img alt="Aperçu de la photo choisie"></div>
+        <div class="champ">
+          <label for="photo-legende">La légende</label>
+          <input type="text" id="photo-legende" name="legende" maxlength="300" placeholder="Ex. : Italie, 2019. Elle commande en italien, on reçoit trois pizzas.">
+        </div>
+        <div class="champ">
+          <label for="photo-prenom">Votre prénom <span class="aide">(facultatif)</span></label>
+          <input type="text" id="photo-prenom" name="prenom" maxlength="60" placeholder="pour savoir qui a fouillé ses archives">
+        </div>
+        <button type="submit">Ajouter au mur</button>
+        <div class="retour" id="retour-photo" role="status" aria-live="polite"></div>
+      </form>
+      <div class="mur-mini" id="mur-mini"><p class="mots-vide">Les photos envoyées par les invités apparaîtront ici et sur le mur de l'accueil.</p></div>
     </div>
   </div>
 </section>
-
 <div class="barre-mobile"><a class="btn plein" href="index.html#rsvp">Confirmer ma venue</a></div>
 
 <footer>
@@ -533,8 +562,6 @@
   var menuBtn = document.querySelector(".menu-btn"), menu = document.getElementById("menu-liens");
   menuBtn.addEventListener("click", function(){ var o = menu.classList.toggle("ouvert"); menuBtn.setAttribute("aria-expanded", o ? "true" : "false"); });
   // ---- Liens playlist et WhatsApp ----
-  var lp = document.getElementById("lien-playlist");
-  if (URL_PLAYLIST.indexOf("http") === 0) lp.href = URL_PLAYLIST; else { lp.classList.add("inactif"); lp.textContent = "Playlist bientôt disponible"; }
 
   // ---- Envoi générique vers le script Google ----
   function envoyer(donnees){
@@ -579,6 +606,54 @@
     return { type: "mot", prenom: prenom, message: message, signe: signe };
   }, function(d){ return "Merci" + (d.prenom ? " " + d.prenom : "") + ", votre mot est au chaud. Elle le découvrira le 15 mai."; });
 
+
+  var visiteur; try { visiteur = localStorage.getItem("v60") || ""; } catch(e){ visiteur = ""; }
+  // ---- Photos des invités ----
+  var fPhoto = document.getElementById("form-photo"), rPhoto = document.getElementById("retour-photo"), bPhoto = fPhoto.querySelector("button[type=submit]");
+  var apercu = document.getElementById("photo-apercu"), murMini = document.getElementById("mur-mini"), imageReduite = null;
+  function reduire(fichier){
+    return new Promise(function(res, rej){
+      var img = new Image(), url = URL.createObjectURL(fichier);
+      img.onload = function(){
+        var max = 1400, w = img.width, h = img.height, k = Math.min(1, max / Math.max(w, h));
+        var c = document.createElement("canvas"); c.width = Math.round(w * k); c.height = Math.round(h * k);
+        c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+        URL.revokeObjectURL(url); res(c.toDataURL("image/jpeg", 0.85));
+      };
+      img.onerror = function(){ URL.revokeObjectURL(url); rej(); };
+      img.src = url;
+    });
+  }
+  document.getElementById("photo-fichier").addEventListener("change", function(e){
+    var fich = e.target.files && e.target.files[0]; imageReduite = null; apercu.hidden = true;
+    if (!fich) return;
+    reduire(fich).then(function(data){ imageReduite = data; apercu.querySelector("img").src = data; apercu.hidden = false; })
+      .catch(function(){ rPhoto.className = "retour erreur"; rPhoto.textContent = "Ce fichier n'a pas pu être lu. Essayez une autre photo (JPG ou PNG)."; });
+  });
+  function rendrePhotos(photos){
+    murMini.innerHTML = "";
+    if (!photos.length) { murMini.innerHTML = '<p class="mots-vide">Les photos envoyées par les invités apparaîtront ici et sur le mur de l\'accueil.</p>'; return; }
+    var rots = [-2, 1.5, -1, 2.5, -2.5, 1];
+    photos.slice(0, 9).forEach(function(ph, i){
+      var fig = document.createElement("figure"); fig.className = "pola"; fig.style.setProperty("--rot", rots[i % rots.length] + "deg");
+      var im = document.createElement("img"); im.src = ph.url; im.alt = "Photo envoyée par un invité"; im.loading = "lazy"; fig.appendChild(im);
+      var fc = document.createElement("figcaption"); fc.textContent = ph.legende; if (ph.prenom) { var q = document.createElement("span"); q.className = "qui"; q.textContent = ph.prenom; fc.appendChild(q); } fig.appendChild(fc);
+      murMini.appendChild(fig);
+    });
+  }
+  var photosChargees = [];
+  fetch(URL_RSVP + "?type=photos").then(function(r){ return r.json(); }).then(function(j){ if (j && j.photos) { photosChargees = j.photos; rendrePhotos(photosChargees); } }).catch(function(){});
+  fPhoto.addEventListener("submit", function(e){
+    e.preventDefault();
+    var legende = fPhoto.legende.value.trim(), prenom = fPhoto.prenom.value.trim();
+    if (!imageReduite) { rPhoto.className = "retour erreur"; rPhoto.textContent = "Choisissez d'abord une photo."; return; }
+    if (!legende) { rPhoto.className = "retour erreur"; rPhoto.textContent = "Une légende, même courte : c'est ce qui fait rire."; fPhoto.legende.focus(); return; }
+    bPhoto.disabled = true; bPhoto.textContent = "Envoi de la photo…";
+    envoyer({ type: "photo", image: imageReduite, mime: "image/jpeg", legende: legende, prenom: prenom, visiteur: visiteur })
+      .then(function(){ rPhoto.className = "retour ok"; rPhoto.textContent = "Merci" + (prenom ? " " + prenom : "") + ", la photo est sur le mur. Elle apparaît sur l'accueil d'ici une minute."; photosChargees.unshift({ url: imageReduite, legende: legende, prenom: prenom }); rendrePhotos(photosChargees); fPhoto.reset(); imageReduite = null; apercu.hidden = true; if (window.suivre) window.suivre("photo ajoutée"); })
+      .catch(function(){ rPhoto.className = "retour erreur"; rPhoto.textContent = "L'envoi n'a pas abouti. Réessayez dans un instant."; })
+      .finally(function(){ bPhoto.disabled = false; bPhoto.textContent = "Ajouter au mur"; });
+  });
 </script>
 
 <script>

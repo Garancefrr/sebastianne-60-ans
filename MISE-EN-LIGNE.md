@@ -30,6 +30,7 @@ Si tu modifies le script plus tard : **Déployer > Gérer les déploiements > cr
 | Messages | Les mots pour Sébastianne (type « Mot ») et les souvenirs du quiz (type « Souvenir ») | Le site |
 | Cadeau | Les idées de cadeau (type « idee », colonne Afficher pour en retirer une) et les votes (un par visiteur et par idée, un « retrait » annule) | Le site |
 | Suivi | Visites et clics anonymes | Le site |
+| Photos | Les photos envoyées par les invités (fichier dans le dossier Drive « Photos 60 ans Sébastianne », colonne Afficher pour en retirer une) | Le site |
 
 Dans « Messages », la colonne **Afficher sur le site** vaut « Oui » pour les mots (ils apparaissent sur le site dans les minutes qui suivent) et « Non » pour les souvenirs (privés, pour le discours). Pour retirer un mot du site, passe la cellule à « Non » ; pour le supprimer, efface la ligne.
 
@@ -65,3 +66,7 @@ Adresse : `https://garancefrr.github.io/sebastianne-60-ans/tableau-de-bord.html`
 Clé d'accès : la valeur de `CLE_TABLEAU` au début de `script-google-rsvp.gs` (par défaut `omonville-2027`). Pour la changer : modifie-la dans le script et redéploie une nouvelle version.
 
 Il affiche : visiteurs différents et pages vues par jour, où les gens cliquent, pages consultées, téléphone ou ordinateur, provenance, scores au quiz, secrets trouvés, réponses au formulaire (personnes attendues par moment) et dernières réponses. Les données brutes sont dans l'onglet **Suivi** du tableau. Le suivi est anonyme : un identifiant aléatoire par navigateur, aucun nom.
+
+## Photos envoyées par les invités
+
+Le script enregistre chaque photo dans un dossier de ton Google Drive nommé **Photos 60 ans Sébastianne** (créé tout seul au premier envoi) et la partage en lecture par lien, pour que le site puisse l'afficher. La première fois, Google te demandera d'autoriser le script à accéder à Drive : accepte, puis redéploie une nouvelle version si besoin. Pour retirer une photo du site, mets « Non » dans la colonne Afficher de l'onglet Photos.

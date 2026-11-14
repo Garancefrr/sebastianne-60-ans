@@ -11,11 +11,14 @@ var ONGLET_RSVP = "RSVP";
 var ONGLET_MESSAGES = "Messages";
 var ONGLET_SUIVI = "Suivi";
 var ONGLET_CADEAU = "Cadeau";
+var ONGLET_PHOTOS = "Photos";
+var DOSSIER_PHOTOS = "Photos 60 ans Sébastianne";   // dossier Google Drive créé automatiquement
 var ENTETES_RSVP = ["Date de réponse", "Nom", "Contact", "Barbecue samedi midi", "Soirée cocktail",
                     "Brunch dimanche", "Absent", "Adultes", "Enfants", "Message"];
 var ENTETES_MESSAGES = ["Date", "Type", "Prénom", "Message", "Signé", "Afficher sur le site"];
 var ENTETES_SUIVI = ["Date", "Type", "Page", "Action", "Détail", "Visiteur", "Appareil", "Provenance"];
 var ENTETES_CADEAU = ["Date", "Type", "Id", "Idée", "Description", "Proposé par", "Visiteur", "Afficher"];
+var ENTETES_PHOTOS = ["Date", "Prénom", "Légende", "Id Drive", "Lien", "Visiteur", "Afficher"];
 
 function doPost(e) {
   try {
@@ -24,6 +27,12 @@ function doPost(e) {
       onglet_(ONGLET_SUIVI, ENTETES_SUIVI).appendRow([new Date(), d.type, d.page || "", d.action || "",
         String(d.detail || "").slice(0, 80), d.visiteur || "", d.appareil || "", String(d.provenance || "").slice(0, 120)]);
       return reponse_({ ok: true });
+    }
+    if (d.type === "photo") {
+      var fichier = enregistrerPhoto_(d);
+      onglet_(ONGLET_PHOTOS, ENTETES_PHOTOS).appendRow([new Date(), String(d.prenom || "").slice(0, 60), String(d.legende || "").slice(0, 300),
+        fichier.getId(), "https://lh3.googleusercontent.com/d/" + fichier.getId(), d.visiteur || "", "Oui"]);
+      return reponse_({ ok: true, id: fichier.getId() });
     }
     if (d.type === "idee") {
       var id = "i" + new Date().getTime().toString(36);
@@ -53,6 +62,7 @@ function doGet(e) {
   var p = (e && e.parameter) || {};
   if (p.type === "mots") return reponse_({ ok: true, mots: motsAffiches_() });
   if (p.type === "cadeau") return reponse_({ ok: true, idees: idees_() });
+  if (p.type === "photos") return reponse_({ ok: true, photos: photos_() });
   if (p.type === "stats") {
     if (p.cle !== CLE_TABLEAU) return reponse_({ ok: false, erreur: "mauvaise clé" });
     return reponse_(statistiques_());
@@ -71,6 +81,31 @@ function motsAffiches_() {
   }
   mots.reverse();
   return mots;
+}
+
+// Photos envoyées par les invités : enregistrées dans un dossier Drive, partagées en lecture par lien.
+function enregistrerPhoto_(d) {
+  var base64 = String(d.image || "").replace(/^data:[^;]+;base64,/, "");
+  var type = String(d.mime || "image/jpeg");
+  var octets = Utilities.base64Decode(base64);
+  var blob = Utilities.newBlob(octets, type, "photo-" + new Date().getTime() + (type === "image/png" ? ".png" : ".jpg"));
+  var dossiers = DriveApp.getFoldersByName(DOSSIER_PHOTOS);
+  var dossier = dossiers.hasNext() ? dossiers.next() : DriveApp.createFolder(DOSSIER_PHOTOS);
+  var fichier = dossier.createFile(blob);
+  fichier.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  return fichier;
+}
+
+function photos_() {
+  var lignes = onglet_(ONGLET_PHOTOS, ENTETES_PHOTOS).getDataRange().getValues();
+  var photos = [];
+  for (var i = 1; i < lignes.length; i++) {
+    var l = lignes[i];
+    if (String(l[6]).toLowerCase() === "oui" && String(l[3])) {
+      photos.push({ prenom: String(l[1]), legende: String(l[2]), url: "https://lh3.googleusercontent.com/d/" + String(l[3]) + "=w800" });
+    }
+  }
+  return photos;
 }
 
 // Idées de cadeau avec leur nombre de votes (un vote par visiteur et par idée ; un « retrait » annule le vote).
@@ -142,13 +177,14 @@ function statistiques_() {
 
   // ---- Messages
   var msgs = onglet_(ONGLET_MESSAGES, ENTETES_MESSAGES).getDataRange().getValues();
+  var photosInvites = photos_().length;
   var mots = 0, souvenirs = 0;
   for (var m = 1; m < msgs.length; m++) { if (String(msgs[m][1]) === "Mot") mots++; else if (String(msgs[m][1]) === "Souvenir") souvenirs++; }
 
   return { ok: true, genere: new Date().toISOString(), visites: visites, visiteurs: Object.keys(visiteurs).length, clics: clics,
            actifs: Object.keys(actifs).length, recents: recents,
            parJour: serieJours, pages: pages, actions: actions, appareils: appareils, provenances: provenances, quiz: quiz, secrets: secrets,
-           rsvp: r, mots: mots, souvenirs: souvenirs };
+           rsvp: r, mots: mots, souvenirs: souvenirs, photos: photosInvites };
 }
 
 function onglet_(nom, entetes) {
